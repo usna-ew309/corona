@@ -17,6 +17,14 @@ git clone https://github.com/usna-ew309/corona.git
 ```
 If using Windows git GUI tools, do XYZ.
 
+## Dependencies and prerequisties
+To use these routines, your Matlab will need the following somewhere in its PATH:
+  * [[https://github.com/kutzer/PlottingToolbox ]]
+    - `simulateImage.m` (needs to be updated to replace `print` & `imread` with `getframe`)
+    - `plotCameraFOV.m`
+  * [[https://github.com/kutzer/WRC_MATLABCameraSupport ]]
+     - `drawDFKCam.m` (we should make a `drawPicoICubieCam`)
+
 ## Ballistics simulation
 ## Turret view simulation
 ## Control simulation
