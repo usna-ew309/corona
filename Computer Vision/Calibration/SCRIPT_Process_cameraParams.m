@@ -99,3 +99,6 @@ for i = 1:nFiles
     fprintf('Calibration Data %d:\n\t A_c2m = \n',i);
     fprintf('\t\t[ %10.6f, %10.6f, %10.6f ]\n\t\t[ %10.6f, %10.6f, %10.6f ]\n\t\t[ %10.6f, %10.6f, %10.6f ]\n',transpose( A_c2m ));
 end
+
+%% Attempt to replicate camera FOV
+fig = figure('Name','
