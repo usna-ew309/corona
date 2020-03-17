@@ -106,6 +106,7 @@ for i = 1:nFiles
 end
 
 %% Attempt to *easily* replicate camera FOV
+%{
 fig = figure('Name','Approximate FOV');
 axs = axes('Parent',fig);
 daspect(axs,[1 1 1]);
@@ -142,9 +143,11 @@ campos(axs,zeros(1,3));
 %camtarget(axs,[0,0,all_H_g2c{i}{j}(3,4)]);
 camtarget(axs,[0,0,24*12*25.4]);
 camup(axs,[0,-1,0]);
+%}
 
+sim = initCameraSim(A_c2m,res,s);
 hg_g = plotCheckerboard(boardSize,squareSize,{'k','w'});
-set(hg_g,'Parent',axs,'Matrix',all_H_g2c{i}{j});
+set(hg_g,'Parent',sim.Axes,'Matrix',all_H_g2c{i}{j});
 
 frm = getframe(fig);
 im = frm.cdata;
