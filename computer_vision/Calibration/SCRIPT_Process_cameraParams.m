@@ -15,6 +15,10 @@
 %
 %   M. Kutzer, 16Mar2020, USNA
 
+clear all;
+close all;
+clc
+
 %% Define base filename and number of calibration files
 fnameBase = 'cameraParams_20200312-evangelista-';
 nFiles = 3;
@@ -85,7 +89,7 @@ for i = 1:nFiles
 end
 
 %% Compare intrinsics
-clearvars -except fnameBase nFiles
+clearvars -except fnameBase nFiles imageResolution boardSize squareSize
 for i = 1:nFiles
     % Clear existing calibration data
     clearvars cameraParams estimationErrors
@@ -95,10 +99,35 @@ for i = 1:nFiles
     load(fname);
     
     all_A_c2m{i} = A_c2m;
+    all_H_g2c{i} = H_g2c;
     
     fprintf('Calibration Data %d:\n\t A_c2m = \n',i);
     fprintf('\t\t[ %10.6f, %10.6f, %10.6f ]\n\t\t[ %10.6f, %10.6f, %10.6f ]\n\t\t[ %10.6f, %10.6f, %10.6f ]\n',transpose( A_c2m ));
 end
 
 %% Attempt to replicate camera FOV
-fig = figure('Name','
+fig = figure('Name','Approximate FOV');
+axs = axes('Parent',fig);
+daspect(axs,[1 1 1]);
+hold(axs,'on');
+xlim([-imageResolution(1),imageResolution(1)]);
+ylim([-imageResolution(2),imageResolution(2)]);
+zlim([0,all_H_g2c{1}{1}(3,4) * 2]);
+% Set axes parameters
+set(fig,'Renderer','OpenGL');
+set(axs,'ZDir','Reverse','XDir','Reverse');
+camproj(axs,'Perspective');
+
+i = 1;
+j = 3;
+
+hAOV = intrinsics2AOV(all_A_c2m{i});
+camva(axs,hAOV)
+campos(axs,zeros(1,3));
+
+
+camtarget(axs,[0,0,all_H_g2c{i}{j}(3,4)]);
+camup(axs,[0,-1,0]);
+
+hg_g = plotCheckerboard(boardSize,squareSize,{'k','w'});
+set(hg_g,'Parent',axs,'Matrix',all_H_g2c{i}{j});
