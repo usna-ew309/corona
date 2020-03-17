@@ -105,7 +105,7 @@ for i = 1:nFiles
     fprintf('\t\t[ %10.6f, %10.6f, %10.6f ]\n\t\t[ %10.6f, %10.6f, %10.6f ]\n\t\t[ %10.6f, %10.6f, %10.6f ]\n',transpose( A_c2m ));
 end
 
-%% Attempt to replicate camera FOV
+%% Attempt to *easily* replicate camera FOV
 fig = figure('Name','Approximate FOV');
 axs = axes('Parent',fig);
 daspect(axs,[1 1 1]);
@@ -113,21 +113,39 @@ hold(axs,'on');
 xlim([-imageResolution(1),imageResolution(1)]);
 ylim([-imageResolution(2),imageResolution(2)]);
 zlim([0,all_H_g2c{1}{1}(3,4) * 2]);
-% Set axes parameters
+
+% Set parameters
 set(fig,'Renderer','OpenGL');
 set(axs,'ZDir','Reverse','XDir','Reverse');
-camproj(axs,'Perspective');
 
-i = 1;
-j = 3;
+% Setup for saving correct image dimensions
+dpi = 96;
+hpix = imageResolution(1);
+vpix = imageResolution(2);
+%hdims = [hpix/vpix,hpix/hpix];  % dimensions for choosing horizontal figure size
+%vdims = [vpix/vpix,vpix/hpix];  % dimensions for choosing vertical figure size
+set(axs,'Units','Normalized','Position',[0,0,1,1]);
+set(fig,'Units','Pixels','Position',[0,0,hpix,vpix]);
+% set(fig,'Units','normalized','Position',[0,0,min(hdims),min(vdims)]);
+% set(fig,'PaperUnits','Inches','PaperPosition',[0,0,hpix/dpi,vpix/dpi]);
+% set(fig,'InvertHardCopy','off');
+
+
+i = 1;  % Data set
+j = 3;  % Extrinsic parameter
 
 hAOV = intrinsics2AOV(all_A_c2m{i});
+camproj(axs,'Perspective');
 camva(axs,hAOV)
 campos(axs,zeros(1,3));
 
-
-camtarget(axs,[0,0,all_H_g2c{i}{j}(3,4)]);
+%camtarget(axs,[0,0,all_H_g2c{i}{j}(3,4)]);
+camtarget(axs,[0,0,24*12*25.4]);
 camup(axs,[0,-1,0]);
 
 hg_g = plotCheckerboard(boardSize,squareSize,{'k','w'});
 set(hg_g,'Parent',axs,'Matrix',all_H_g2c{i}{j});
+
+frm = getframe(fig);
+im = frm.cdata;
+
