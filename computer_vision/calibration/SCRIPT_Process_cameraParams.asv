@@ -161,8 +161,8 @@ for j = 3:5  % Extrinsic parameter
     plot(simPoints(:,1),simPoints(:,2),'og');
     plot(truPoints(:,1),truPoints(:,2),'xr');
     
-    set(axs,'Visible','on');
-    
+    set(axs,'Visble','on');
+    xb
     % Calculate affine adjustment
     simPoints = simPoints.';
     simPoints(3,:) = 1;
