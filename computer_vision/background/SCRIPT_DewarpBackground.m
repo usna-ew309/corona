@@ -45,7 +45,7 @@ if ~isfile(filename)
     y = [offset,res(1)-offset];
     xx = [x(1),x(2),x(2),x(1)];
     yy = [y(1),y(1),y(2),y(2)];
-    %plt = plot(axs,xx,yy,'om','LineWidth',1.5,'MarkerSize',10);%,'MarkerWidth',2);
+
     verts = [xx; yy].';
     
     % Allow polygon to be dragged
