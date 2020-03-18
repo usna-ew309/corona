@@ -1,0 +1,10 @@
+Ri 078
+L 8.4 m
+W 8.18 m
+H 2.83 m
+Ri 080
+L 7.6 m
+W 8.5 m
+H 2.71 m
+divot dimensions for front left corner 0.5m W x 2.82m L
+Used 100 m tape measure for long dimensions (hard to get it straight and taut so treat these as not super precise); used 9m tape measure for ceiling heights but again hard to read single handed.
