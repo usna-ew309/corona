@@ -10,7 +10,7 @@ function dQ = MotDynHF(t,Q,params)
 if t<0.45
     dc = 0;
 else
-    dc = 0.45*sin(2*pi/3*t);
+    dc = sin(2*pi/10*t);
 end
 
 % introduce deadzone here! Use EW305 results to quantify!
@@ -22,10 +22,14 @@ end
 u = 12*dc;
 
 % motor torque (generated from current state Q(3))
+% ia = 1/params.Ra*(u-params.Km*Q(2));
+% Tm = params.Km*ia;
+
 Tm = params.Km*Q(3);
 
 % equations of motion (EOM)
 dQ(1,1) = Q(2); % dtheta = omega
 dQ(2,1) = 1/params.J*(Tm - params.Bm*Q(2) - frictionNL(Q(2),params)); % domega = torques and friction
+
 dQ(3,1) = 1/params.La*(u - params.Km*Q(2) - params.Ra*Q(3)); % di/dt = circuit equation with inductance
 end
