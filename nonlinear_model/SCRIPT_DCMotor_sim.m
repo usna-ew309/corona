@@ -123,18 +123,18 @@ motorParams.case = 1; % (for testing/development) case one, sinusoidal input
 
 
 % plot result
-figure(1); clf
-subplot(2,1,1)
-plot(time_unisin,Q_sin(:,1))
-hold on
-plot(time_unisin,pos_unisin)
+fig = figure(1); clf
+ax1 = subplot(2,1,1);
+plot(ax1,time_unisin,Q_sin(:,1))
+set(ax1,'NextPlot','add')
+plot(ax1,time_unisin,pos_unisin)
 xlabel('Time (s)')
 ylabel('Orientation (rad)')
-title('Simulation Result')
-axis([0 40 0 45])
+title('Simulation vs. Experiment')
+set(ax1,'XLim',[0 40],'YLim', [0 45])
 legend('Experimental Data','Simulation')
-subplot(2,1,2)
-plot(time_unisin,Q_sin(:,2))
+ax2 = subplot(2,1,2);
+plot(ax2,time_unisin,Q_sin(:,2))
 xlabel('Time (s)')
 ylabel('speed (rad/s)')
 % subplot(3,1,3)
@@ -155,22 +155,22 @@ q0 = [theta0;dtheta0;i0;0];
 
 % integrate EOM
 motorParams.case = 2; % (for testing/development) case one, sinusoidal input
-[~,Q_step] = ode45(@MotDynHF,t,q0,[],motorParams,cntrlprms);
+[~,Q_step] = ode45(@MotDynHF,time_unistep,q0,[],motorParams,cntrlprms);
 
 
 % plot result
-figure(2); clf
-subplot(2,1,1)
-plot(t,Q_step(:,1))
-hold on
-plot(time_unistep,pos_unistep)
+fig2 = figure(2); clf
+axa = subplot(2,1,1);
+plot(axa,time_unistep,Q_step(:,1))
+set(axa,'NextPlot','add')
+plot(axa,time_unistep,pos_unistep)
 xlabel('Time (s)')
 ylabel('Orientation (rad)')
 title('Simulation Result')
-axis([0 6 0 15])
+set(axa,'XLim',[0 6],'YLim',[0 15])
 legend('Experimental Data','Simulation')
-subplot(2,1,2)
-plot(t,Q_step(:,2))
+axb = subplot(2,1,2);
+plot(axb,time_unistep,Q_step(:,2))
 xlabel('Time (s)')
 ylabel('speed (rad/s)')
 % subplot(3,1,3)
@@ -201,8 +201,8 @@ motorParams.case = 3;
 [~,Q_cl] = ode45(@MotDynHF,t,q0,[],motorParams,cntrlprms);
 
 
-
-figure(4); clf
+% plot results
+fig3 = figure(3); clf
 plot(t,Q_cl(:,1))
 hold on
 plot(t,cntrlprms.despos*ones(size(t)),'--r')
