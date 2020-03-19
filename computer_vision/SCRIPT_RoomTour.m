@@ -6,7 +6,6 @@ clc
 %% Load Camera Calibration
 load( fullfile('calibration','data','cameraParams_20200312-evangelista-1.mat') );
 
-
 %% Present results
 roomIDs = {'Ri078','Ri080'};
 
