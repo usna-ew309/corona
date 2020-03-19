@@ -15,6 +15,9 @@
 %       Axes ------------------------ Tag: Axes, Ri0**
 %           HgTransform ------------- Tag: Room Center Frame
 %               HgTransform --------- Tag: West Corner Frame
+%                   Light ----------- Tag: Light 1
+%                   ...
+%                   Light ----------- Tag: Light 8
 %                   HgTransform ----- Tag: SW Wall Base Frame
 %                       HgTransform - Tag: SW Wall Dewarp Frame
 %                           Image --- Tag: SW Wall Image
@@ -138,6 +141,23 @@ for i = 1:numel(roomIDs)
     H_b2w{i,2} =  Tx( X_w{i}(1,2) ) *  Ty( X_w{i}(2,2) ) * Rx(pi/2) * Ry( (3/2) * pi );
     H_b2w{i,3} =  Tx( X_w{i}(1,3) ) *  Ty( X_w{i}(2,3) ) * Rx(pi/2) * Ry( (0/2) * pi );
     H_b2w{i,4} =  Tx( X_w{i}(1,4) ) *  Ty( X_w{i}(2,4) ) * Rx(pi/2) * Ry( (1/2) * pi );
+    
+    % Add lights
+    w = W/3;
+    l = L/3;
+    lightPos = [...
+        (1/2)*w, (1/2)*l, H;... % Light 1
+        (3/2)*w, (1/2)*l, H;... % Light 2
+        (5/2)*w, (1/2)*l, H;... % Light 3
+        (2/2)*w, (3/2)*l, H;... % Light 4
+        (4/2)*w, (3/2)*l, H;... % Light 5
+        (1/2)*w, (5/2)*l, H;... % Light 6
+        (3/2)*w, (5/2)*l, H;... % Light 7
+        (5/2)*w, (5/2)*l, H];   % Light 8
+    for k = 1:size(lightPos,1)
+        lgt(i,k) = light('Parent',hg_w(i),'Style','Local',...
+            'Position',lightPos(k,:),'Tag',sprintf('Light %d',k));
+    end
     
     for j = 1:numel(directionIDs)
         % Define the vertical points on the wall
