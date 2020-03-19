@@ -30,7 +30,7 @@ switch params.case % test cases for simulation
 end
 
 % introduce deadzone here! Use EW305 results to quantify!
-if dc<params.dzone.high && dc>-params.dzone.low
+if dc<params.dzone.pos && dc>-params.dzone.neg
     dc = 0;
 end
 

@@ -8,8 +8,11 @@
 % agreement.
 %
 % The state-space model consists of:
-% Three motor states: position (rad), velocity (rad/s) and current (amps)
-% One state to implement integral control: position error integral (rad*s)
+% Three motor states: 
+%       position (rad)
+%       velocity (rad/s) and current (amps)
+% One state to implement integral control:
+%       time integral of position error (rad*s)
 %
 % Parameters of the model are organized in a MATLAB data structure. These
 % parameters include:
@@ -27,30 +30,63 @@
 %   motorParams.friction.del: approximation of stiction range (rad/s)
 %   motorParams.dzone.pos: dead zone for positive inputs (duty cycle)
 %   motorParams.dzone.neg: dead zone for negative inputs (duty cycle)
+%   motorParams.case: operational case to simulate
+%                       1 = sinusoidal input, amplitude 1, period 10 second
+%                       2 = step input, magnitude 0.45 (45% duty cycle)
+%                       3 = closed loop control
+%
+% To implement a linear control scheme (P, PI, PD, PID) a control
+% parameters structure is included in the model to efficiently pass
+% variables to necessary locations in the simulation framework. The control
+% parameters include:
+%   cntrlParams.despos: desired position (orientation) of the turret (rad)
+%   cntrlParams.Kp: gain of proportional control term
+%   cntrlParams.Ki: gain of integral control term
+%   cntrlParams.Kd: gain of derivative control term
 
+
+
+%% Import experimental data
 
 % add path to folder with experimental data
 addpath('G:\My Drive\Courses\EW309 AY20\10. Turret System Modeling\Turret Data')
 
 % file name of sine data
-fname = 'EncoderForMike_PWM_Sinev2.xlsx';
+fname_sine = 'EncoderForMike_PWM_Sinev2.xlsx';
+% file name of step input data
+fname_step = 'EncoderForMike_PWM_45.xlsx';
 
-% read experimental data into 
-dat = readtable(fname);
+% read in data from excel spreadsheet
+dat_sine = readtable(fname_sine);
+dat_step = readtable(fname_step);
 
-time = dat{:,2};
-dc = dat{:,1};
-enc = dat{:,3};
-pos = dat{:,4};
+% extract quantities (sine)
+time_sine = dat_sine{:,2};  % time vector
+dc_sine = dat_sine{:,1};    % duty cycle vector
+enc_sine = dat_sine{:,3};   % encoder counts
+pos_sine = dat_sine{:,4};   % position (in radians)
 
-time_uniform = 0:.01:max(time)-8;
-pos_uniform = interp1(time,pos,time_uniform);
-pos_uniform(1:2) = 0;
-inds = find(dc==-1);
+% interpolate data to sample at equal time intervals
+time_unisin = 0:.01:max(time_sine)-8; % crop data to relevant time window
+pos_unisin = interp1(time_sine,pos_sine,time_unisin);
+pos_unisin(1:2) = 0; % get rid of NaN initial values
 
+% extract quantities (step)
+time_step = dat_step{:,2};  % time vector
+dc_step = 0.45*ones(size(time_step));    % duty cycle vector
+dc_step(time_step<=1) = 0;
+enc_step = dat_step{:,3};   % encoder counts
+pos_step = dat_step{:,4};   % position (in radians)
+
+% interpolate data to sample at equal time intervals
+time_unistep = 0:.01:max(time_step);
+pos_unistep = interp1(time_step,pos_step,time_unistep);
+pos_unistep(1:2) = 0;
+
+
+%% Establish motor model parameters
 
 % Motor constants
-motorParams.case = 1; % (for testing/development) case one, sinusoidal input
 motorParams.Ra = 5; % Armature resistance (Ohms)
 motorParams.La = 0.2*10^-1; % Armature inductance (H) (~10^-3)
 motorParams.Bm = .027; % coefficient of friction (Nm*s/rad)
@@ -59,7 +95,6 @@ motorParams.J = 0.16*10^0; % moment of inertial
 motorParams.friction.a0 = 0.14; % positive spin static friction (Nm)
 motorParams.friction.a1 = 0.3; % positive spin coulumb friction coefficient
 motorParams.friction.a2 = 1.3; % speed decay constant on coulumb friction
-
 motorParams.friction.a3 = .4; % negative spin static friction (Nm)
 motorParams.friction.a4 = 0.2; % negative spin coulumb friction coefficient
 motorParams.friction.a5 = 1; % speed decay constant on coulumb friction
@@ -67,110 +102,118 @@ motorParams.friction.del = 0.02; % rad/s "linear zone" of friction
 motorParams.dzone.pos = 0.25; % ten percent duty cycle on positive side 0.25 comes from trials 
 motorParams.dzone.neg = 0.25; % twenty percent on negative side 0.25 comes from trials
 
-
+% controller parameters (initialized to zero for comparison to open loop)
 cntrlprms.despos = 0;
 cntrlprms.Kp = 0;
 cntrlprms.Ki = 0;
 cntrlprms.Kd = 0;
 
+%% Simulate model with sine input and compare to experimental data
 
-% initial condition
-t = 0:.01:max(time)-8;
-theta0 = 0;
-dtheta0 = 0;
-i0 = 0;
-q0 = [theta0;dtheta0;i0;0];
+% initial conditions
+theta0 = 0; % position
+dtheta0 = 0; % angular velocity
+i0 = 0; % initial current
+q0 = [theta0;dtheta0;i0;0]; % initial state vector
 
-%
 
 % integrate EOM
-[~,Q] = ode45(@MotDynHF,t,q0,[],motorParams,cntrlprms);
-
-%
+motorParams.case = 1; % (for testing/development) case one, sinusoidal input
+[~,Q_sin] = ode45(@MotDynHF,time_unisin,q0,[],motorParams,cntrlprms);
 
 
 % plot result
 figure(1); clf
-% subplot(3,1,1)
-plot(t,Q(:,1))
+subplot(2,1,1)
+plot(time_unisin,Q_sin(:,1))
 hold on
-plot(time_uniform,pos_uniform)
+plot(time_unisin,pos_unisin)
 xlabel('Time (s)')
 ylabel('Orientation (rad)')
-% title('Simulation Result')
-% subplot(3,1,2)
-% plot(t,Q(:,2))
+title('Simulation Result')
+axis([0 40 0 45])
+legend('Experimental Data','Simulation')
+subplot(2,1,2)
+plot(time_unisin,Q_sin(:,2))
+xlabel('Time (s)')
+ylabel('speed (rad/s)')
+% subplot(3,1,3)
+% plot(time_unisin,Q(:,3))
 % xlabel('Time (s)')
-% ylabel('speed (rad/s)')
+% ylabel('current (amp)')
+
+
+%% Simulate model with step input and compare to experimental data
+
+
+% initial conditions
+theta0 = 0; % position (rad)
+dtheta0 = 0; % angular velocity (rad/s)
+i0 = 0; % amps
+q0 = [theta0;dtheta0;i0;0];
+
+
+% integrate EOM
+motorParams.case = 2; % (for testing/development) case one, sinusoidal input
+[~,Q_step] = ode45(@MotDynHF,t,q0,[],motorParams,cntrlprms);
+
+
+% plot result
+figure(2); clf
+subplot(2,1,1)
+plot(t,Q_step(:,1))
+hold on
+plot(time_unistep,pos_unistep)
+xlabel('Time (s)')
+ylabel('Orientation (rad)')
+title('Simulation Result')
+axis([0 6 0 15])
+legend('Experimental Data','Simulation')
+subplot(2,1,2)
+plot(t,Q_step(:,2))
+xlabel('Time (s)')
+ylabel('speed (rad/s)')
 % subplot(3,1,3)
 % plot(t,Q(:,3))
 % xlabel('Time (s)')
 % ylabel('current (amp)')
-axis([0 40 0 45])
-% legend('Experimental Data','Simulation')
 
+%% Test out a controller on the motor model
 
-% % animate turning
-% fig = figure(2); clf
-% ax = axes('Parent',fig);
+% configure control parameters
+cntrlprms.despos = pi/4;
+cntrlprms.Kp = .4;
+cntrlprms.Ki = 0.06;
+cntrlprms.Kd = 0;
 
-%
-
-fname = 'EncoderForMike_PWM_45.xlsx';
-
-dat = readtable(fname);
-
-time = dat{:,2};
-dc = 0.45*ones(size(time));
-dc(time<=1) = 0;
-enc = dat{:,3};
-pos = dat{:,4};
-
-time_unistep = 0:.01:max(time);
-pos_unistep = interp1(time,pos,time_unistep);
-pos_unistep(1:2) = 0;
-
-
-motorParams.case = 2; % (for testing/development) case one, sinusoidal input
 
 % initial condition
-t = 0:.01:max(time);
 theta0 = 0;
 dtheta0 = 0;
 i0 = 0;
 q0 = [theta0;dtheta0;i0;0];
 
-%
+% simulation time array
+t = 0:.01:40;
 
 % integrate EOM
-[~,Q] = ode45(@MotDynHF,t,q0,[],motorParams,cntrlprms);
+motorParams.case = 3;
+[~,Q_cl] = ode45(@MotDynHF,t,q0,[],motorParams,cntrlprms);
 
-%
 
 
-% plot result
-figure(2); clf
-% subplot(3,1,1)
-plot(t,Q(:,1))
+figure(4); clf
+plot(t,Q_cl(:,1))
 hold on
-plot(time_unistep,pos_unistep)
+plot(t,cntrlprms.despos*ones(size(t)),'--r')
+legend('Closed-loop Response', 'Desired Position')
 xlabel('Time (s)')
 ylabel('Orientation (rad)')
-% title('Simulation Result')
-% subplot(3,1,2)
-% plot(t,Q(:,2))
-% xlabel('Time (s)')
-% ylabel('speed (rad/s)')
-% subplot(3,1,3)
-% plot(t,Q(:,3))
-% xlabel('Time (s)')
-% ylabel('current (amp)')
-% legend('Experimental Data','Simulation')
-axis([0 6 0 15])
 
 
 
-% %% Optimize parameters based on both trials
+%% Optimize parameters based on both trials (not working!)
+
 % data(1).time = time_uniform;
 % data(1).pos = pos_uniform;
 % 
@@ -201,33 +244,3 @@ axis([0 6 0 15])
 % 
 
 
-%% test out a controller on the motor model
-
-motorParams.case = 3;
-cntrlprms.despos = pi/4;
-cntrlprms.Kp = .4;
-cntrlprms.Ki = 0.06;
-cntrlprms.Kd = 0;
-
-
-% initial condition
-t = 0:.01:40;
-theta0 = 0;
-dtheta0 = 0;
-i0 = 0;
-q0 = [theta0;dtheta0;i0;0];
-
-%
-
-% integrate EOM
-[~,Q] = ode45(@MotDynHF,t,q0,[],motorParams,cntrlprms);
-
-
-
-figure(4); clf
-plot(t,Q(:,1))
-hold on
-plot(t,cntrlprms.despos*ones(size(t)),'--r')
-legend('Closed-loop Response', 'Desired Position')
-xlabel('Time (s)')
-ylabel('Orientation (rad)')
