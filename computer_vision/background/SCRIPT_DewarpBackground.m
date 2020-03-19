@@ -1,4 +1,37 @@
 %% SCRIPT_DewarpBackground
+% This script allows the user to manually define the affine transformation
+% relating the "true" wall dimensions for Ri078 and Ri080 to the pixel
+% coordinates associated with images captured by D. Evangelista. Then
+% creates a figure for each room where each image is warped and placed in
+% 3D space.
+%
+% This script produces:
+%   3D Walls, Ri078.fig and
+%   3D Walls, Ri080.fig
+%
+% Each figure contains the following hierarchy (discounting "triad.m" 
+% lines) where tabs illustrate parent/child relationships:
+%   Figure -------------------------- Tag: Figure, Ri0**             
+%       Axes ------------------------ Tag: Axes, Ri0**
+%           HgTransform ------------- Tag: Room Center Frame
+%               HgTransform --------- Tag: West Corner Frame
+%                   HgTransform ----- Tag: SW Wall Base Frame
+%                       HgTransform - Tag: SW Wall Dewarp Frame
+%                           Image --- Tag: SW Wall Image
+%                   HgTransform ----- Tag: SE Wall Base Frame
+%                       HgTransform - Tag: SE Wall Dewarp Frame
+%                           Image --- Tag: SE Wall Image
+%                   HgTransform ----- Tag: NE Wall Base Frame
+%                       HgTransform - Tag: NE Wall Dewarp Frame
+%                           Image --- Tag: NE Wall Image
+%                   HgTransform ----- Tag: NW Wall Base Frame
+%                       HgTransform - Tag: NW Wall Dewarp Frame
+%                           Image --- Tag: NW Wall Image
+%
+%   EW309 - Guided Design Experience
+%
+%   M. Kutzer, 18Mar2020, USNA
+
 clear all
 close all
 clc
@@ -25,6 +58,8 @@ wallDimensions{2,3} = [W,H]; % Ri080, NE Wall
 wallDimensions{2,4} = [L,H]; % Ri080, NW Wall
 
 %% Select initialize plot
+% Note that this section should not run if/when DigitizedWalls.mat is
+% already available. This step is a bit timeconsuming. 
 filename = 'DigitizedWalls.mat';
 if ~isfile(filename)
     fig = figure;
@@ -75,19 +110,22 @@ if ~isfile(filename)
     
     save(filename,'X_m','roomIDs','directionIDs','wallDimensions');
 else
+    fprintf('Loading previous dewarping points...\n');
     load(filename);
+    fprintf('[COMPLETE]\n');
 end
 
 %% Define the wall-referenced coordinates
 
 for i = 1:numel(roomIDs)
-    fig(i) = figure('Name',sprintf('3D Walls, %s',roomIDs{i}));
-    axs(i) = axes('Parent',fig(i));
+    fig(i) = figure('Name',sprintf('3D Walls, %s',roomIDs{i}),'Tag',sprintf('Figure, %s',roomIDs{i}));
+    axs(i) = axes('Parent',fig(i),'Tag',sprintf('Axes, %s',roomIDs{i}));
     hold(axs(i),'on');
     daspect(axs(i),[1 1 1]);
     view(axs(i),3);
     
-    hg_w(i) = triad('Parent',axs(i),'Scale',500);
+    % Define "west corner frame" in the lower west corner of the room
+    hg_w(i) = triad('Parent',axs(i),'Scale',500,'Tag','West Corner Frame');
     
     W = wallDimensions{i,1}(1);
     L = wallDimensions{i,2}(1);
@@ -127,14 +165,19 @@ for i = 1:numel(roomIDs)
         fname = fullfile(pname,fname);
         im = imread(fname);
         
-        hg_b(i,j) = triad('Parent',hg_w(i),'Scale',300,'Matrix',H_b2w{i,j});
-        hg_m(i,j) = triad('Parent',hg_b(i,j),'Matrix',A_m2b_3D{i,j});
+        % Define wall base frame
+        hg_b(i,j) = triad('Parent',hg_w(i),'Scale',300,'Matrix',H_b2w{i,j},'Tag',sprintf('%s Wall Base Frame',directionIDs{j}));
+        
+        % Define wall dwarp frame
+        hg_m(i,j) = triad('Parent',hg_b(i,j),'Matrix',A_m2b_3D{i,j},'Tag',sprintf('%s Wall Dewarp Frame',directionIDs{j}));
+        
+        % Plot image
         img = imshow(im,'Parent',axs(i));
-        set(img,'Parent',hg_m(i,j));
+        set(img,'Parent',hg_m(i,j),'Tag',sprintf('%s Wall Image',directionIDs{j}));
     end
     
-    % Create base frame
-    hg_o(i) = triad('Parent',axs(i),'Scale',300,'LineWidth',2);
+    % Create base frame in the center of the room
+    hg_o(i) = triad('Parent',axs(i),'Scale',300,'LineWidth',2,'Tag','Room Center Frame');
     H_w2o{i} = Tx(-W/2) * Ty(-L/2) * Tz(-1400); % Align with camera height
     set(hg_w(i),'Parent',hg_o(i),'Matrix',H_w2o{i});
     

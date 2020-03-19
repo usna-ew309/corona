@@ -1,7 +1,16 @@
 %% SCRIPT_RoomTour
+% This script tests camera view and image dewarping. 
+%
+%   EW309 - Guided Design Experience
+%
+%   M. Kutzer, 18Mar2020, USNA
+
 clear all
 close all
 clc
+
+%% Set save media flag
+saveMedia = false;
 
 %% Load Camera Calibration
 load( fullfile('calibration','data','cameraParams_20200312-evangelista-1.mat') );
@@ -33,25 +42,33 @@ for i = 1:2
     hg_o = get(axs,'Children');
     fig = get(axs,'Parent');
     
-    saveas(fig,[fname,'.png'],'png');
+    if saveMedia
+        vidObj = VideoWriter([fname,'.mp4'],'MPEG-4');
+        open(vidObj);
+        
+        saveas(fig,[fname,'.png'],'png');
+    end
     
     % Move contents into camera FOV
-    vidObj = VideoWriter([fname,'.mp4'],'MPEG-4');
-    open(vidObj);
-    
     set(hg_o,'Parent',sim.Axes);
     drawnow;
     delete(fig);
-    
+ 
     for theta = linspace(0,2*pi,5*30)
         set(hg_o,'Matrix',Rx(pi/2)*Rz(theta));
         drawnow
-        % Grab frame for video
-        frame = getframe(sim.Figure);
-        writeVideo(vidObj,frame);
+        
+        if saveMedia
+            % Grab frame for video
+            frame = getframe(sim.Figure);
+            writeVideo(vidObj,frame);
+        end
     end
-    % Close video obj
-    close(vidObj);
+    
+    if saveMedia
+        % Close video obj
+        close(vidObj);
+    end
     
     delete(sim.Figure);
 end

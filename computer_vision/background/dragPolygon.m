@@ -1,4 +1,16 @@
 function [ptc,plt] = dragPolygon(axs,verts)
+% DRAGPOLYGON allows a user to drag an n-point polygon specified using a
+% series of Nx2, 2-dimensional vertices.
+%   [ptc,plt] = DRAGPOLYGON(axs,verts) specifies the axis that will contain
+%   the polygon (axs), and the vertices of the polygon. This function
+%   returns a single patch handle (ptc), and an N-element array of plot
+%   handles. 
+%
+%   References:
+%       [1] F. Bouffard, "draggable.m," 
+%       https://www.mathworks.com/matlabcentral/fileexchange/4179-draggable
+%
+%   M. Kutzer, 18Mar2020, USNA
 
 global ptc 
 
