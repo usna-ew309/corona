@@ -21,6 +21,13 @@ To pull the most recent version:
 ```bash
 git pull
 ```
+## Windows Git and Github notes
+To do this on a USNA windows machine:
+  * Download GitHub desktop from [https://desktop.github.com]
+  * Install GitHub desktop. This will require administrator rights
+  * Prof Kutzer can show you the rest... Github has a tutorial here once you get it installed: [https://guides.github.com/activities/hello-world/]
+  * A tutorial for using the Github desktop client is here:
+[https://idratherbewriting.com/learnapidoc/pubapis_github_desktop_client.html]
 
 ## Dependencies and prerequisties
 To use these routines, your Matlab will need the following somewhere in its PATH:

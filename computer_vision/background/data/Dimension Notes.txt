@@ -7,4 +7,25 @@ L 7.6 m
 W 8.5 m
 H 2.71 m
 divot dimensions for front left corner 0.5m W x 2.82m L
-Used 100 m tape measure for long dimensions (hard to get it straight and taut so treat these as not super precise); used 9m tape measure for ceiling heights but again hard to read single handed.
+Used 100 m tape measure for long dimensions (hard to get it straight and taut so treat these as not super precise); 
+used 9m tape measure for ceiling heights but again hard to read single handed.
+
+Ri078
+Front blackboard
+from bottom to top of black part of blackboard: 111 cm
+from floor to bottom of black part of blackboard: 93 cm
+Rear blackboard
+from bottom to top of black part of blackboard: 111 cm
+from floor to bottom of black part of blackboard: 63 cm
+Typical turret heights (Turret 14 where panoramic shot taken)
+130 cm barrel centerline above floor
+140 cm camera centerline above floor
+Rickover 080
+Front blackboard appears same as in Ri080
+111 cm bottom to top of black part of blackboard
+94 cm from floor to bottom of black part of blackboard
+Rear blackboard appears same as in Ri078
+111 cm from bottom to top
+62 cm from floor to bottom
+Turret heights at panoramic shot location are same
+SmartBoard in the room is 117 cm from bottom to top
