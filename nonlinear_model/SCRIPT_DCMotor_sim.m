@@ -1,7 +1,41 @@
+%% Description
+% This script performs basic analysis and comparison between the nonlinear
+% DC motor model and the experimentally collected data from the turret
+% apparatus. The nonlinearities in the model include static friction and
+% coulumb friction (Stribeck effect) along with a dead zone input
+% nonlinearity. These two effects when incorporated into the basic DC motor
+% dynamics appear to emulate the experimental data with reasonable
+% agreement.
+%
+% The state-space model consists of:
+% Three motor states: position (rad), velocity (rad/s) and current (amps)
+% One state to implement integral control: position error integral (rad*s)
+%
+% Parameters of the model are organized in a MATLAB data structure. These
+% parameters include:
+%   motParams.Ra: motor armature resistance (Ohms)
+%   motParams.La: motor armature inducatnce (H)
+%   motorParams.Bm: coefficient of linear friction (Nm*s/rad)
+%   motorParams.Km: transducer constant (Nm*s/rad) (amp*H/rad)
+%   motorParams.J: moment of inertia (Kg*m^2)
+%   motorParams.friction.a0: positive spin static friction (Nm)
+%   motorParams.friction.a1: positive spin coulumb friction coefficient (Nm)
+%   motorParams.friction.a2: speed decay constant on coulumb friction (unitless
+%   motorParams.friction.a3: negative spin static friction (Nm)
+%   motorParams.friction.a4: negative spin coulumb friction coefficient
+%   motorParams.friction.a5: speed decay constant on coulumb friction
+%   motorParams.friction.del: approximation of stiction range (rad/s)
+%   motorParams.dzone.pos: dead zone for positive inputs (duty cycle)
+%   motorParams.dzone.neg: dead zone for negative inputs (duty cycle)
+
+
+% add path to folder with experimental data
 addpath('G:\My Drive\Courses\EW309 AY20\10. Turret System Modeling\Turret Data')
 
+% file name of sine data
 fname = 'EncoderForMike_PWM_Sinev2.xlsx';
 
+% read experimental data into 
 dat = readtable(fname);
 
 time = dat{:,2};
@@ -16,22 +50,22 @@ inds = find(dc==-1);
 
 
 % Motor constants
-params.case = 1; % (for testing/development) case one, sinusoidal input
-params.Ra = 5; % Armature resistance (Ohms)
-params.La = 0.2*10^-1; % Armature inductance (H) (~10^-3)
-params.Bm = .027; % coefficient of friction (Nm*s/rad)
-params.Km = .95; % transducer constant (Nm*s/rad) (amp*H/rad)
-params.J = 0.16*10^0; % moment of inertial
-params.friction.a0 = 0.14; % positive spin static friction (Nm)
-params.friction.a1 = 0.3; % positive spin coulumb friction coefficient
-params.friction.a2 = 1.3; % speed decay constant on coulumb friction
+motorParams.case = 1; % (for testing/development) case one, sinusoidal input
+motorParams.Ra = 5; % Armature resistance (Ohms)
+motorParams.La = 0.2*10^-1; % Armature inductance (H) (~10^-3)
+motorParams.Bm = .027; % coefficient of friction (Nm*s/rad)
+motorParams.Km = .95; % transducer constant (Nm*s/rad) (amp*H/rad)
+motorParams.J = 0.16*10^0; % moment of inertial
+motorParams.friction.a0 = 0.14; % positive spin static friction (Nm)
+motorParams.friction.a1 = 0.3; % positive spin coulumb friction coefficient
+motorParams.friction.a2 = 1.3; % speed decay constant on coulumb friction
 
-params.friction.a3 = .4; % negative spin static friction (Nm)
-params.friction.a4 = 0.2; % negative spin coulumb friction coefficient
-params.friction.a5 = 1; % speed decay constant on coulumb friction
-params.friction.del = 0.02; % rad/s "linear zone" of friction
-params.dzone.high = 0.25; % ten percent duty cycle on positive side 0.25 comes from trials 
-params.dzone.low = 0.25; % twenty percent on negative side 0.25 comes from trials
+motorParams.friction.a3 = .4; % negative spin static friction (Nm)
+motorParams.friction.a4 = 0.2; % negative spin coulumb friction coefficient
+motorParams.friction.a5 = 1; % speed decay constant on coulumb friction
+motorParams.friction.del = 0.02; % rad/s "linear zone" of friction
+motorParams.dzone.pos = 0.25; % ten percent duty cycle on positive side 0.25 comes from trials 
+motorParams.dzone.neg = 0.25; % twenty percent on negative side 0.25 comes from trials
 
 
 cntrlprms.despos = 0;
@@ -50,7 +84,7 @@ q0 = [theta0;dtheta0;i0;0];
 %
 
 % integrate EOM
-[~,Q] = ode45(@MotDynHF,t,q0,[],params,cntrlprms);
+[~,Q] = ode45(@MotDynHF,t,q0,[],motorParams,cntrlprms);
 
 %
 
@@ -97,7 +131,7 @@ pos_unistep = interp1(time,pos,time_unistep);
 pos_unistep(1:2) = 0;
 
 
-params.case = 2; % (for testing/development) case one, sinusoidal input
+motorParams.case = 2; % (for testing/development) case one, sinusoidal input
 
 % initial condition
 t = 0:.01:max(time);
@@ -109,7 +143,7 @@ q0 = [theta0;dtheta0;i0;0];
 %
 
 % integrate EOM
-[~,Q] = ode45(@MotDynHF,t,q0,[],params,cntrlprms);
+[~,Q] = ode45(@MotDynHF,t,q0,[],motorParams,cntrlprms);
 
 %
 
@@ -169,7 +203,7 @@ axis([0 6 0 15])
 
 %% test out a controller on the motor model
 
-params.case = 3;
+motorParams.case = 3;
 cntrlprms.despos = pi/4;
 cntrlprms.Kp = .4;
 cntrlprms.Ki = 0.06;
@@ -186,7 +220,7 @@ q0 = [theta0;dtheta0;i0;0];
 %
 
 % integrate EOM
-[~,Q] = ode45(@MotDynHF,t,q0,[],params,cntrlprms);
+[~,Q] = ode45(@MotDynHF,t,q0,[],motorParams,cntrlprms);
 
 
 
