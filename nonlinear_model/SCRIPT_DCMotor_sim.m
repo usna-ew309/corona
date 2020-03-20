@@ -91,14 +91,15 @@ motorParams.Ra = 5; % Armature resistance (Ohms)
 motorParams.La = 0.2*10^-1; % Armature inductance (H) (~10^-3)
 motorParams.Bm = .027; % coefficient of friction (Nm*s/rad)
 motorParams.Km = .95; % transducer constant (Nm*s/rad) (amp*H/rad)
-motorParams.J = 0.16*10^0; % moment of inertial
-motorParams.friction.a0 = 0.14; % positive spin static friction (Nm)
-motorParams.friction.a1 = 0.3; % positive spin coulumb friction coefficient
+motorParams.J = 0.15*10^0; % moment of inertial
+motorParams.friction.a0 = 0.15; % positive spin static friction (Nm)
+motorParams.friction.a1 = 0.25; % positive spin coulumb friction coefficient
 motorParams.friction.a2 = 1.3; % speed decay constant on coulumb friction
-motorParams.friction.a3 = .4; % negative spin static friction (Nm)
-motorParams.friction.a4 = 0.2; % negative spin coulumb friction coefficient
+
+motorParams.friction.a3 = .36; % negative spin static friction (Nm)
+motorParams.friction.a4 = 0.25; % negative spin coulumb friction coefficient
 motorParams.friction.a5 = 1; % speed decay constant on coulumb friction
-motorParams.friction.del = 0.02; % rad/s "linear zone" of friction
+motorParams.friction.del = 0.05; % rad/s "linear zone" of friction
 motorParams.dzone.pos = 0.25; % ten percent duty cycle on positive side 0.25 comes from trials 
 motorParams.dzone.neg = 0.25; % twenty percent on negative side 0.25 comes from trials
 
@@ -108,7 +109,7 @@ cntrlprms.Kp = 0;
 cntrlprms.Ki = 0;
 cntrlprms.Kd = 0;
 
-%% Simulate model with sine input and compare to experimental data
+% Simulate model with sine input and compare to experimental data
 
 % initial conditions
 theta0 = 0; % position
@@ -132,7 +133,7 @@ xlabel('Time (s)')
 ylabel('Orientation (rad)')
 title('Simulation vs. Experiment')
 set(ax1,'XLim',[0 40],'YLim', [0 45])
-legend('Experimental Data','Simulation')
+legend('Simulation','Experimental Data')
 ax2 = subplot(2,1,2);
 plot(ax2,time_unisin,Q_sin(:,2))
 xlabel('Time (s)')
@@ -143,7 +144,7 @@ ylabel('speed (rad/s)')
 % ylabel('current (amp)')
 
 
-%% Simulate model with step input and compare to experimental data
+% Simulate model with step input and compare to experimental data
 
 
 % initial conditions
@@ -168,7 +169,7 @@ xlabel('Time (s)')
 ylabel('Orientation (rad)')
 title('Simulation Result')
 set(axa,'XLim',[0 6],'YLim',[0 15])
-legend('Experimental Data','Simulation')
+legend('Simulation','Experimental Data')
 axb = subplot(2,1,2);
 plot(axb,time_unistep,Q_step(:,2))
 xlabel('Time (s)')
@@ -183,8 +184,8 @@ ylabel('speed (rad/s)')
 % configure control parameters
 cntrlprms.despos = pi/4;
 cntrlprms.Kp = .4;
-cntrlprms.Ki = 0.06;
-cntrlprms.Kd = 0;
+cntrlprms.Ki = 0.1;
+cntrlprms.Kd = 0.1;
 
 
 % initial condition
@@ -194,7 +195,7 @@ i0 = 0;
 q0 = [theta0;dtheta0;i0;0];
 
 % simulation time array
-t = 0:.01:40;
+t = 0:.1:10;
 
 % integrate EOM
 motorParams.case = 3;
