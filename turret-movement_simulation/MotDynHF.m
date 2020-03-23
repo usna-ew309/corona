@@ -22,17 +22,23 @@ function dQ = MotDynHF(t,Q,params,cntrlprms)
 %           params.dzone.neg: dead zone for negative inputs (duty cycle)
 %           params.case: operational case to simulate
 %                       1 = sinusoidal input, amplitude 1, period 10 second
-%                       2 = step input, magnitude 0.45 (45% duty cycle)
+%                       2 = step input, user-specified magnitude (0-1),
+%                       step input is applied at t=1.0 second
 %                       3 = closed loop control
-%       cntrlprms: data structure containing PID control gains
+%            
+%       cntrlprms: data structure containing operational mode (open- or closed-loop)
+%                  and parameters of operation (PID control gains or
+%                  open-loop step input duty cycle)
+%           cntrlprms.mode: operational mode ('open' or 'closed')
 %           cntrlprms.despos: desired position (rad)
 %           cntrlprms.Kp: proportional gain
 %           cntrlprms.Ki: integral gain
 %           cntrlprms.Kd: derivative gain
+%           cntrlprms.stepPWM: duty cycle magnitude of step input (0-1)
 %   OUTPUT:
 %       dQ: 4x1 derivative of state vector Q at time t
 %
-%   Example Usage:
+%   Example Usage: (open-loop sine wave input)
 %       motorParams.Ra = 5; % Armature resistance (Ohms)
 %       motorParams.La = 0.2*10^-1; % Armature inductance (H) (~10^-3)
 %       motorParams.Bm = .027; % coefficient of friction (Nm*s/rad)
@@ -51,6 +57,7 @@ function dQ = MotDynHF(t,Q,params,cntrlprms)
 %       cntrlprms.Kp = 0;
 %       cntrlprms.Ki = 0;
 %       cntrlprms.Kd = 0;
+%       cntrlprms.stepPWM = 0.45;
 % 
 %       % initial conditions
 %       t = 0:.01:3;
@@ -63,7 +70,7 @@ function dQ = MotDynHF(t,Q,params,cntrlprms)
 %
 % L. DeVries, Ph.D., USNA
 % EW309, AY2020
-% Last edited 3/19/2020
+% Last edited 3/22/2020
 
 
 
@@ -77,10 +84,10 @@ switch params.case % test cases for simulation
         end
         err = 0;
     case 2 % positive step input, compare to experimental data
-        if t<=1
+        if t<1
             dc = 0;
         else
-            dc = 0.45;
+            dc = cntrlprms.stepPWM;
         end
         err = 0;
     case 3 % closed loop control, for students

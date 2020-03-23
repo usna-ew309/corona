@@ -35,14 +35,16 @@
 %                       2 = step input, magnitude 0.45 (45% duty cycle)
 %                       3 = closed loop control
 %
-% To implement a linear control scheme (P, PI, PD, PID) a control
-% parameters structure is included in the model to efficiently pass
-% variables to necessary locations in the simulation framework. The control
-% parameters include:
+% To implement an open or closed-loop linear control scheme (P, PI, PD,
+% PID) a control parameters structure is included in the model to
+% efficiently pass variables to necessary locations in the simulation
+% framework. The control parameters can include:
+%   cntrlParams.mode: operational mode, 'closed' or 'open'
 %   cntrlParams.despos: desired position (orientation) of the turret (rad)
 %   cntrlParams.Kp: gain of proportional control term
 %   cntrlParams.Ki: gain of integral control term
 %   cntrlParams.Kd: gain of derivative control term
+%   cntrlParams.stepPWM: duty cycle of open loop step input
 
 
 
@@ -156,6 +158,7 @@ q0 = [theta0;dtheta0;i0;0];
 
 % integrate EOM
 motorParams.case = 2; % (for testing/development) case one, sinusoidal input
+cntrlprms.stepPWM = 0.45;
 [~,Q_step] = ode45(@MotDynHF,time_unistep,q0,[],motorParams,cntrlprms);
 
 
