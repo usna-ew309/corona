@@ -1,22 +1,11 @@
-function metric = objFunc(x,params,dat)
+function metric = objFunc(x,dat)
+%UNTITLED2 Summary of this function goes here
+%   Detailed explanation goes here
 
-
-params.La = x(1);
-params.Bm = x(2);
-params.Km = x(3);
-params.J = x(4);
-params.friction.a0 = x(5);
-params.friction.a1 = x(6);
-
-params.case = 1;
-[~,Qsin] = ode45(@MotDynHF,dat(1).time,[0;0;0],[],params);
-params.case = 2;
-[~,Qstep] = ode45(@MotDynHF,dat(2).time,[0;0;0],[],params);
-
-quan1 = (Qsin(:,1)-dat(1).pos').^2;
-quan2 = (Qstep(:,1)-dat(2).pos').^2;
-
-qu = [quan1;quan2];
-metric = sqrt(mean(qu));
+s = tf('s');
+H = x(1)/((s+x(2))*(s+x(3)));
+out = lsim(H,dat(:,1),dat(:,2));
+metric = sqrt(mean((dat(:,3)-out).^2));
 
 end
+
