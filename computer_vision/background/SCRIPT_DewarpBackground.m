@@ -202,5 +202,6 @@ for i = 1:numel(roomIDs)
     set(hg_w(i),'Parent',hg_o(i),'Matrix',H_w2o{i});
     
     % Save figure
+    set(axs(i),'XDir','Normal','YDir','Normal','ZDir','Normal');
     saveas(fig(i),sprintf('3D Walls, %s.fig',roomIDs{i}),'fig')
 end
