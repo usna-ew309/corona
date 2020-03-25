@@ -1,0 +1,8 @@
+(1) The approximate diameter target that you want me to use in my default settings and demo(s)
+- 5in (12.7 cm) diameter target (this is what we used last year)
+
+(2) The typical shapes of the dummy targets (e.g. equilateral triangle or square) 
+- Square and triangle (I don't think we had an equilateral triangle last year but that works for me).  We also had dummy 5in diameter circles that were different colors than the intended targe
+
+(3) Colors other than orange that you may want to use for the targets.
+- Yellow and Red 
