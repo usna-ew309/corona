@@ -4,7 +4,7 @@ close all
 clc
 
 %% Initialize FOV
-h = createEW309RoomFOV;
+h = createEW309RoomFOV('Ri080');
 
 %% Load camera parameters
 load( fullfile('calibration','data','cameraParams_20200312-evangelista-1.mat'),'A_c2m' );
