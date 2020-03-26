@@ -1,14 +1,15 @@
-function [hg,ptc] = drawTarget(varargin)
+function [h_a2r,ptc] = drawTarget(varargin)
 % DRAWTARGET draws a target of specified shape, size, and color and returns
 % the graphics object(s) associated with the target.
-%   [hg,ptc] = DRAWTARGET(shape,diameter,color) creates a shape specified
-%   by a string argument whose overall size fits within a bounding circle
-%   of the specified diameter in millimeters. The specified color is then
-%   used to fill the patch object that is created. Both the patch object
-%   and an hgtransform parent of the patch of object are returned.
+%   [h_a2r,ptc] = DRAWTARGET(shape,diameter,color) creates a shape 
+%   specifiedby a string argument whose overall size fits within a 
+%   bounding circle of the specified diameter in millimeters. The 
+%   specified color is then used to fill the patch object that is created. 
+%   Both the patch object and an hgtransform parent of the patch of object 
+%   are returned.
 %
-%   [hg,ptc] = DRAWTARGET(axs,shape,diameter,color) specifies the axes
-%   handle for the target.
+%   [h_a2r,ptc] = DRAWTARGET(axs,shape,diameter,color) specifies the 
+%   parent handle for the target (e.g. an axes or hgtransform).
 %
 %   Valid shape selections include:
 %       'Circle'
@@ -109,13 +110,24 @@ switch lower(shape)
         error('Specified shape "%s" is not recognized.',shape);
 end
 
-%% Create patch object and triad
-hold(axs,'on');
-daspect(axs,[1 1 1]);
+%% Load color
+% TODO - update color based on dpi and diameter.
+res = [1,1];
+cPatch = createTargetColorPatch(color,res);
 
-hg = triad('Parent',axs,'Scale',0.75*r,'LineWidth',1.5);
-ptc = patch('Parent',hg,'Vertices',verts,'Faces',faces,...
-    'FaceColor','b','EdgeColor','k','LineWidth',1.5);
+%% Create patch object and triad
+switch lower( get(axs,'Type') )
+    case 'axes'
+        hold(axs,'on');
+        daspect(axs,[1 1 1]);
+end
+
+h_a2r = triad('Parent',axs,'Scale',0.75*r,'LineWidth',1.5);
+% ptc = patch('Parent',hg,'Vertices',verts,'Faces',faces,...
+%     'FaceColor','b','EdgeColor','k','LineWidth',1.5);
+ptc = patch('Parent',h_a2r,'Vertices',verts,'Faces',faces,...
+    'FaceColor',double(reshape(cPatch,1,3))./256,...
+    'EdgeColor','none');
 
 % Plot circle for debugging
 %{
@@ -127,7 +139,31 @@ verts = [r*cos(theta); r*sin(theta)].';
 plot(hg,verts(:,1),verts(:,2),'m');
 %}
 
+return
+
+%% Work on Dennis's "warp" the image
+% NOTE THAT THIS CURRENTLY DOES NOT WORK.
+% Easy fixes:
+%   (1) If the function patch2surf exists.
+%   (2) ...
 %% Load color
-% TODO - update color based on dpi and diameter.
-res = [200,200];
+nPnts = 200;
+res = [nPnts,nPnts];
 cPatch = createTargetColorPatch(color,res);
+
+[X,Y] = meshgrid(linspace(-r,r,nPnts),linspace(-r,r,nPnts));
+
+[in,on] = inpolygon(X,Y,verts(:,1),verts(:,2));
+bin = in | on;
+X = X(bin);
+Y = Y(bin);
+
+%plot(X,Y,'.b');
+
+X = reshape(X,1,[]);
+Y = reshape(Y,1,[]);
+Z = zeros(size(X));
+
+h_a2r = triad('Parent',axs,'Scale',0.75*r,'LineWidth',1.5);
+ptc = warp( X,Y,Z,cPatch);
+set(ptc,'Parent',h_a2r);

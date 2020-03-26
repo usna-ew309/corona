@@ -32,6 +32,7 @@ function h = createEW309RoomFOV(varargin)
 %               to the room center frame.
 %       Room_Length ------- Length of the room (mm)
 %       Room_Width -------- Width of the room (mm)
+%       Room_Height ------- Height of the room (mm)
 %
 %   M. Kutzer, 23Mar2020, USNA
 
@@ -112,6 +113,7 @@ h.Frames.h_nw2w = h.Frames.NW_Wall;
 
 %% Recover lighting handles
 h.Lights = flipud( findobj('Type','Light','Parent',h.Frames.Room_West_Corner) );
+set(h.Lights,'Color',0.5*[244, 255, 250]./256); % Adjust light intensity & color
 
 %% Get Transformations and dimensions
 h.H_b2c = get(h.Frames.Barrel,          'Matrix'); % This should remain fixed
@@ -125,6 +127,12 @@ set(h.Frames.Room_West_Corner,'Matrix',h.H_w2r);
 % Get room length and width
 h.Room_Length = -h.H_w2r(2,4) * 2;
 h.Room_Width  = -h.H_w2r(1,4) * 2;
+switch room
+    case 'Ri078'
+        h.Room_Height = 2.83e3;
+    case 'Ri080'
+        h.Room_Height = 2.71e3; 
+end
 
 %% Show figure
 set(h.Figure, 'Visible','on'); % Show figure
