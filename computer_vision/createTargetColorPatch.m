@@ -7,7 +7,7 @@ function cPatch = createTargetColorPatch(varargin)
 %   cPatch = CREATETARGETCOLORPATCH(color,res) creates an NxM pixel color
 %   patch for the specified color where res = [N,M].
 %
-%   Valid Color Selections
+%   Valid color selections include:
 %       'Bright Yellow'
 %       'Bright Pink'
 %       'Bright Green'
