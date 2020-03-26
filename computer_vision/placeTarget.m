@@ -35,7 +35,7 @@ end
 if wobble ~= 0
     v_wobble = 2*rand(2,1) - 1;
     v_wobble(3,:) = 0;
-    v_wobble = v_wobble./v_wobble;
+    v_wobble = v_wobble./norm(v_wobble);
     r_wobble = wedge( wobble * v_wobble );
     R_wobble = expm( r_wobble );
     H_wobble = eye(4);

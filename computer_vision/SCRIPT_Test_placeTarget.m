@@ -6,16 +6,25 @@ clc
 %% Initialize FOV
 h = createEW309RoomFOV('Ri080');
 
-%% 
+%% Define shape and color options
+shapes = {'Circle','Square','Random Rectangle','Equilateral Triangle',...
+    'Random Triangle','Random Polygon'};
+colors = {'Bright Yellow','Bright Pink','Bright Green','Dark Orange',...
+    'Light Orange','Dark Red','Light Red'};
+
+%% Plot colors
 diameter = 300;
-[h_a2r,ptc] = drawTarget(h.Frames.h_r2b,'Circle',diameter,'Bright Green');
 
-x = 0.20*h.Room_Width*(2*rand - 1);
-y = h.Room_Length/2 - 1;
-z = 0.30*h.Room_Height*(2*rand - 1);
-
-wobble = pi/4;
-h_a2r = placeTarget(h_a2r,[x,y,z],0,0);
+for i = 1:numel(colors)
+    [h_a2r(i),ptc(i)] = drawTarget(h.Frames.h_r2b,'Circle',diameter,colors{i});
+    
+    x = 0.20*h.Room_Width*(2*rand - 1);
+    y = h.Room_Length/2 - diameter;
+    z = 0.30*h.Room_Height*(2*rand - 1);
+    
+    wobble = deg2rad(10);
+    h_a2r(i) = placeTarget(h_a2r(i),[x,y,z],0,wobble);
+end
 
 %% Tweak parameters
 set(ptc,'FaceLighting','gouraud'); % {'none','flat','gouraud'}
@@ -26,11 +35,6 @@ set(ptc,'SpecularStrength',0.9);
 return
 
 %% Populate the North East Wall with targets
-shapes = {'Circle','Square','Random Rectangle','Equilateral Triangle',...
-    'Random Triangle','Random Polygon'};
-colors = {'Bright Yellow','Bright Pink','Bright Green','Dark Orange',...
-    'Light Orange','Dark Red','Light Red'};
-
 nTargets = 10;
 diameter = 300;
 
@@ -40,7 +44,7 @@ for i = 1:numel(sIDXs)
     [h_a2r,ptc] = drawTarget(h.Frames.h_r2b,shapes{ sIDXs(i) },diameter,colors{ cIDXs(i) });
     
     x = 0.20*h.Room_Width*(2*rand - 1);
-    y = h.Room_Length/2 - 1;
+    y = h.Room_Length/2 - diameter;
     z = 0.30*h.Room_Height*(2*rand - 1);
     h_a2r = placeTarget(h_a2r,[x,y,z],0,0);
 end
