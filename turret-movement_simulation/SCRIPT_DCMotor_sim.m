@@ -51,7 +51,7 @@
 %% Import experimental data
 
 % add path to folder with experimental data
-addpath('G:\My Drive\Courses\EW309 AY20\10. Turret System Modeling\Turret Data')
+addpath([pwd '\Turret Data'])
 
 % file name of sine data
 fname_sine = 'EncoderForMike_PWM_Sinev2.xlsx';

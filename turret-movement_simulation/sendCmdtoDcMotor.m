@@ -257,6 +257,13 @@ u = 12*dc;
 ia = 1/params.Ra*(u-params.Km*Q(2)); % armature current
 Tm = params.Km*ia; % torque
 
+% torque limit motor. This cold also be done by dialing in Km
+if Tm>0.89294 % Nm torque limit based on torque speed curve analysis
+    Tm = 0.89294;
+elseif Tm<-0.89294
+    Tm = -0.89294;
+end
+
 % use this motor torque when assuming inductance is not negligible
 % Tm = params.Km*Q(3);
 
