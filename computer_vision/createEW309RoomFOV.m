@@ -33,6 +33,7 @@ function h = createEW309RoomFOV(varargin)
 %       Room_Length ------- Length of the room (mm)
 %       Room_Width -------- Width of the room (mm)
 %       Room_Height ------- Height of the room (mm)
+%       Light_Height ------ Height of lights above the ceiling (mm)
 %
 %   M. Kutzer, 23Mar2020, USNA
 
@@ -79,7 +80,7 @@ NW_Tag = 'NW Wall Base Frame';
 h.Room = room;
 h.Figure = findobj('Type','Figure','Tag',figTag);
 if numel(h.Figure) > 1
-    warning('Multiple FOV plots are open!');
+    warning('Multiple FOV figures are open!');
     h.Figure = h.Figure(1);
 end
 
@@ -113,8 +114,21 @@ h.Frames.h_nw2w = h.Frames.NW_Wall;
 
 %% Recover lighting handles
 h.Lights = flipud( findobj('Type','Light','Parent',h.Frames.Room_West_Corner) );
-set(h.Lights,'Color',0.5*[244, 255, 250]./256); % Adjust light intensity & color
+set(h.Lights,'Color',1.0*[244, 255, 250]./256); % Adjust light intensity & color
+%set(h.Lights([1,2,3,6,7,8]),'Visible','Off');   % Turn off Southwest and Northeast lights
 
+% Move the lights higher (or lower)
+delta_H_ft = 15;                    % Change in height (ft)
+delta_H_mm = delta_H_ft*12*25.4;    % Change in height (mm)
+
+p0 = get(h.Lights,'Position');
+for i = 1:numel(p0)
+    p = p0{i,1};
+    p(3) = p(3) + delta_H_mm;
+    set(h.Lights(i),'Position',p);
+end
+
+        
 %% Get Transformations and dimensions
 h.H_b2c = get(h.Frames.Barrel,          'Matrix'); % This should remain fixed
 h.H_r2b = get(h.Frames.Room_Center,     'Matrix'); % This should be adjusted to "move" the Barrel (Tx * Ty * Rz)
@@ -133,6 +147,7 @@ switch room
     case 'Ri080'
         h.Room_Height = 2.71e3; 
 end
+h.Light_Height = delta_H_mm;
 
 %% Show figure
 set(h.Figure, 'Visible','on'); % Show figure

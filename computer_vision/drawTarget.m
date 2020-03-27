@@ -113,7 +113,7 @@ end
 %% Load color
 % TODO - update color based on dpi and diameter.
 res = [1,1];
-cPatch = createTargetColorPatch(color,res);
+cPatch = createTargetColorPatch(color,res,'uniform mean');
 
 %% Create patch object and triad
 switch lower( get(axs,'Type') )
@@ -122,13 +122,19 @@ switch lower( get(axs,'Type') )
         daspect(axs,[1 1 1]);
 end
 
+% Create target coordinate system
 h_a2r = triad('Parent',axs,'Scale',0.75*r,'LineWidth',1.5);
-% ptc = patch('Parent',hg,'Vertices',verts,'Faces',faces,...
-%     'FaceColor','b','EdgeColor','k','LineWidth',1.5);
+hideTriad(h_a2r); % Hide the "triad" visualization
+% Create the patch object 
 ptc = patch('Parent',h_a2r,'Vertices',verts,'Faces',faces,...
     'FaceColor',double(reshape(cPatch,1,3))./256,...
     'EdgeColor','none');
-
+% Update the "material" finish of the patch object
+materialsSTR = {'shiny','dull','metal'};
+material(ptc,materialsSTR{2});              % Dull finish, selected by 
+                                            % T. Severson & L. DeVries,
+                                            % 27Mar2020, EW309.
+ 
 % Plot circle for debugging
 %{
 n = 100;
@@ -141,11 +147,13 @@ plot(hg,verts(:,1),verts(:,2),'m');
 
 return
 
-%% Work on Dennis's "warp" the image
+%% WORK IN PROGRESS
+% Based on D. Evangelista' "warp" the image
 % NOTE THAT THIS CURRENTLY DOES NOT WORK.
 % Easy fixes:
 %   (1) If the function patch2surf exists.
-%   (2) ...
+%   (2) Someone can easily make a "surf" of the geometries considered.
+
 %% Load color
 nPnts = 200;
 res = [nPnts,nPnts];
