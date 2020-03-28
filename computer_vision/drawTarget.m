@@ -135,7 +135,7 @@ material(ptc,materialsSTR{2});              % Dull finish, selected by
                                             % T. Severson & L. DeVries,
                                             % 27Mar2020, EW309.
  
-% Plot circle for debugging
+%% Plot circle for debugging
 %{
 n = 100;
 theta_i = 0;
