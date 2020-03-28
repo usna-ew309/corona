@@ -128,7 +128,6 @@ for i = 1:numel(p0)
     set(h.Lights(i),'Position',p);
 end
 
-        
 %% Get Transformations and dimensions
 h.H_b2c = get(h.Frames.Barrel,          'Matrix'); % This should remain fixed
 h.H_r2b = get(h.Frames.Room_Center,     'Matrix'); % This should be adjusted to "move" the Barrel (Tx * Ty * Rz)

@@ -16,7 +16,7 @@ colors = {'Bright Yellow','Bright Pink','Bright Green','Dark Orange',...
 diameter = 300;
 
 for i = 1:numel(colors)
-    [h_a2r(i),ptc(i)] = drawTarget(h.Frames.h_r2b,'Circle',diameter,colors{i});
+    [h_a2r(i),ptc(i)] = createTarget(h.Frames.h_r2b,'Circle',diameter,colors{i});
     
     x = 0.20*h.Room_Width*(2*rand - 1);
     y = h.Room_Length/2 - diameter;
@@ -27,10 +27,10 @@ for i = 1:numel(colors)
 end
 
 %% Tweak parameters
-set(ptc,'FaceLighting','gouraud'); % {'none','flat','gouraud'}
-set(ptc,'SpecularColorReflectance',0.9);
-set(ptc,'SpecularExponent',10);
-set(ptc,'SpecularStrength',0.9);
+% set(ptc,'FaceLighting','gouraud'); % {'none','flat','gouraud'}
+% set(ptc,'SpecularColorReflectance',0.9);
+% set(ptc,'SpecularExponent',10);
+% set(ptc,'SpecularStrength',0.9);
 
 %% Move the lights away
 delta_H = linspace(0,50,5000)*12*25.4; % Increase light height by 200ft
@@ -54,7 +54,7 @@ diameter = 300;
 sIDXs = mod(1:nTargets,numel(shapes)) + 1; randi([1,numel(shapes)],1,nTargets);
 cIDXs = mod(1:nTargets,numel(colors)) + 1;%randi([1,numel(colors)],1,nTargets);
 for i = 1:numel(sIDXs)
-    [h_a2r,ptc] = drawTarget(h.Frames.h_r2b,shapes{ sIDXs(i) },diameter,colors{ cIDXs(i) });
+    [h_a2r,ptc] = createTarget(h.Frames.h_r2b,shapes{ sIDXs(i) },diameter,colors{ cIDXs(i) });
     
     x = 0.20*h.Room_Width*(2*rand - 1);
     y = h.Room_Length/2 - diameter;

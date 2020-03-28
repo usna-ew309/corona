@@ -28,7 +28,7 @@ scale = 0.65;
 X = scale*X;
 Z = scale*Z;
 for i = 1:numel(colors)
-    [h_a2r(i),ptc(i)] = drawTarget(h.Frames.h_r2b,'Circle',diameter,colors{i});
+    [h_a2r(i),ptc(i)] = createTarget(h.Frames.h_r2b,'Circle',diameter,colors{i});
     
     x(i) = 0.20*h.Room_Width*X(i);%(2*rand - 1);
     y(i) = h.Room_Length/2 - diameter;

@@ -18,14 +18,17 @@ narginchk(2,3);
 % TODO - check h!
 % TODO - check theta, x, and y
 
+% Get current pose
+H_r2b_0 = get(h.Frames.h_r2b,'Matrix');
+
 if nargin == 2
     theta = varargin{1};
-    x = 0;
-    y = 0;
+    x = -H_r2b_0(1,4);
+    y = -H_r2b_0(2,4);
 end
 
 if nargin == 3
-    theta = 0;
+    theta = -atan2(H_r2b_0(2,1),H_r2b_0(1,1));
     x = varargin{1};
     y = varargin{2};
 end
