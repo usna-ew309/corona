@@ -148,6 +148,10 @@ switch room
 end
 h.Light_Height = delta_H_mm;
 
+%% Hide triads
+hgALL = findobj(h.Figure,'Type','hgtransform');
+hideTriad(hgALL);
+
 %% Show figure
 set(h.Figure, 'Visible','on'); % Show figure
 drawnow;

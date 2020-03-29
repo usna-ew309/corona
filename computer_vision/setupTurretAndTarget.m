@@ -12,9 +12,9 @@ function varargout = setupTurretAndTarget(h,varargin)
 %
 %   h = SETUPTURRETANDTARGET(h,targetSpecs,range,turretSpecs)
 %
-%       turretSpecs.HorizontalOffset - change in left/right position
-%       turretSpecs.VerticalBias ----- change in height
-%       turretSpecs.Angle ------------ change in angle
+%       turretSpecs.HorizontalOffset - change in turret left/right position
+%       turretSpecs.VerticalBias ----- change in turret height
+%       turretSpecs.Angle ------------ change in turret angle
 %
 %   h = SETUPTURRETANDTARGET(h,targetSpecs,range,turretSpecs,wall)
 %
@@ -120,7 +120,7 @@ switch wall
     otherwise
         error('Specified wall "%s" is undefined.',wall);
 end
-target.XYZ(3) =  (targetSpecs.VerticalBias + turretSpecs.VerticalOffset);
+target.XYZ(3) = (targetSpecs.VerticalBias + turretSpecs.VerticalOffset);
 target.diameter = targetSpecs.Diameter;
 target.color = targetSpecs.Color;
 target.wobble = targetSpecs.Wobble;
@@ -138,8 +138,6 @@ H_r2b = H_b2r^(-1);
 h.H_r2b = H_r2b;
 set(h.Frames.h_r2b,'Matrix',H_r2b);
 
-
-
 %% Package Output
 if nargout > 0
     varargout{1} = h;
@@ -147,74 +145,3 @@ end
 if nargout > 1
     varargout{2} = h_a2r;
 end
-
-%%
-return
-%%
-
-%%
-% Define turret position
-switch wall
-    case 'NE'
-        target.XYZ(1) = targetSpecs.HorizontalBias;
-        target.XYZ(2) = h.Room_Length/2 - targetSpecs.Diameter/2;
-        target.XYZ(3) = targetSpecs.VerticalBias;
-        target.theta = 0;
-        target.diameter = targetSpecs.Diameter;
-        target.color = targetSpecs.Color;
-        target.wobble = targetSpecs.Wobble;
-        
-        turret.XYZ(1) = target.XYZ(1);
-        turret.XYZ(2) = target.XYZ(2) - (range + barrelLength);
-        turret.XYZ(3) = 0;
-        turret.theta = target.theta + turretAng;
-    case 'NW'
-        target.XYZ(1) = -(h.Room_Width/2 - targetSpecs.Diameter/2);
-        target.XYZ(2) = -(targetSpecs.HorizontalBias);
-        target.XYZ(3) = targetSpecs.VerticalBias;
-        target.theta = pi/2;
-        target.diameter = targetSpecs.Diameter;
-        target.color = targetSpecs.Color;
-        target.wobble = targetSpecs.Wobble;
-        
-        turret.XYZ(1) = target.XYZ(1) + (range + barrelLength);
-        turret.XYZ(2) = target.XYZ(2);
-        turret.XYZ(3) = 0;
-        turret.theta = target.theta + turretAng;
-    case 'SW'
-        target.XYZ(1) = -(targetSpecs.HorizontalBias);
-        target.XYZ(2) = -(h.Room_Length/2 - targetSpecs.Diameter/2);
-        target.XYZ(3) = targetSpecs.VerticalBias;
-        target.theta = pi;
-        target.diameter = targetSpecs.Diameter;
-        target.color = targetSpecs.Color;
-        target.wobble = targetSpecs.Wobble;
-        
-        turret.XYZ(1) = target.XYZ(1);
-        turret.XYZ(2) = target.XYZ(2) - (range + barrelLength);
-        turret.XYZ(3) = 0;
-        turret.theta = target.theta + turretAng;
-    case 'SE'
-        target.XYZ(1) = h.Room_Width/2 - targetSpecs.Diameter/2;
-        target.XYZ(2) = targetSpecs.HorizontalBias;
-        target.XYZ(3) = targetSpecs.VerticalBias;
-        target.theta = 3*pi/2;
-        target.diameter = targetSpecs.Diameter;
-        target.color = targetSpecs.Color;
-        target.wobble = targetSpecs.Wobble;
-        
-        turret.XYZ(1) = target.XYZ(1) - (range + barrelLength);
-        turret.XYZ(2) = target.XYZ(2);
-        turret.XYZ(3) = 0;
-        turret.theta = target.theta + turretAng;
-    otherwise
-        error('Specified wall "%s" is undefined.',wall);
-end
-
-%% Move turret 
-h = moveTurretFOV(h,turret.XYZ(1),turret.XYZ(2));
-h = moveTurretFOV(h,turret.theta);
-
-%% Create and place the target
-h_a2r = createTarget(h.Frames.h_r2b,'Circle',target.diameter,target.color);
-h_a2r = placeTarget(h_a2r,target.XYZ,target.theta,target.wobble);

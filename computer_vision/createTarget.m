@@ -124,7 +124,7 @@ end
 
 % Create target coordinate system
 h_a2r = triad('Parent',axs,'Scale',0.75*r,'LineWidth',1.5);
-%hideTriad(h_a2r); % Hide the "triad" visualization
+hideTriad(h_a2r); % Hide the "triad" visualization
 % Create the patch object 
 ptc = patch('Parent',h_a2r,'Vertices',verts,'Faces',faces,...
     'FaceColor',double(reshape(cPatch,1,3))./256,...

@@ -9,19 +9,27 @@ clc
 %% Set save media flag
 saveMedia = false;
 
+if saveMedia
+    vidObj = VideoWriter('Test_setupTurretAndTarget.mp4','MPEG-4');
+    open(vidObj);
+end
+
 %% Initialize FOV
 h = createEW309RoomFOV('Ri080');
 
 %% Define test parameters
 walls    = {'NE','NW','SW','SE'};
-ranges   = linspace(5,20,100).*(12*25.4);               % Test ranges
-hBiases  = linspace(-10,10,100).*(12*25.4);             % Horizontal bias
-vBiases  = linspace(-3,3,100).*(12*25.4);               % Vertical bias
-hOffsets = linspace(-10,10,100).*(12*25.4);             % Horizontal offset
-vOffsets = linspace(-3,3,100).*(12*25.4);               % Vertical offset
-thetas   = linspace( deg2rad(-12),deg2rad(12),100 );    % Turret angles
+n = 2*30;
+ranges   = linspace(5,20,n).*(12*25.4);               % Test ranges
+hBiases  = linspace(-6,6,n).*(12*25.4);             % Horizontal bias
+vBiases  = linspace(-3,3,n).*(12*25.4);               % Vertical bias
+hOffsets = linspace(-10,10,n).*(12*25.4);             % Horizontal offset
+vOffsets = linspace(-3,3,n).*(12*25.4);               % Vertical offset
+thetas   = linspace( deg2rad(-12),deg2rad(12),n );    % Turret angles
 
+txt = nan;
 %% Test walls
+%{
 hBias = 0;
 vBias = -1*12*25.4;
 hOffset = 0;
@@ -50,6 +58,7 @@ for w = 1:numel(walls)
     drawnow;
     pause;
 end
+%}
 
 %% Test walls and range shifts
 hBias = 0;
@@ -78,8 +87,15 @@ for w = 1:numel(walls)
             delete(h_a2r);
         end
         [h,h_a2r] = setupTurretAndTarget(h,targetSpecs,range,turretSpecs,wall);
+        % Update information
+        txt = dispTurretAndTargetInfo(txt,range,targetSpecs,turretSpecs);
         drawnow;
-
+        if saveMedia
+            % Grab frame for video
+            frame = getframe(h.Figure);
+            writeVideo(vidObj,frame);
+        end
+        
     end
 end
 
@@ -110,8 +126,15 @@ for w = 1:numel(walls)
             delete(h_a2r);
         end
         [h,h_a2r] = setupTurretAndTarget(h,targetSpecs,range,turretSpecs,wall);
+        % Update information
+        txt = dispTurretAndTargetInfo(txt,range,targetSpecs,turretSpecs);
         drawnow;
-
+        if saveMedia
+            % Grab frame for video
+            frame = getframe(h.Figure);
+            writeVideo(vidObj,frame);
+        end
+        
     end
 end
 
@@ -142,8 +165,15 @@ for w = 1:numel(walls)
             delete(h_a2r);
         end
         [h,h_a2r] = setupTurretAndTarget(h,targetSpecs,range,turretSpecs,wall);
+        % Update information
+        txt = dispTurretAndTargetInfo(txt,range,targetSpecs,turretSpecs);
         drawnow;
-
+        if saveMedia
+            % Grab frame for video
+            frame = getframe(h.Figure);
+            writeVideo(vidObj,frame);
+        end
+        
     end
 end
 
@@ -174,8 +204,15 @@ for w = 1:numel(walls)
             delete(h_a2r);
         end
         [h,h_a2r] = setupTurretAndTarget(h,targetSpecs,range,turretSpecs,wall);
+        % Update information
+        txt = dispTurretAndTargetInfo(txt,range,targetSpecs,turretSpecs);
         drawnow;
-
+        if saveMedia
+            % Grab frame for video
+            frame = getframe(h.Figure);
+            writeVideo(vidObj,frame);
+        end
+        
     end
 end
 
@@ -206,8 +243,15 @@ for w = 1:numel(walls)
             delete(h_a2r);
         end
         [h,h_a2r] = setupTurretAndTarget(h,targetSpecs,range,turretSpecs,wall);
+        % Update information
+        txt = dispTurretAndTargetInfo(txt,range,targetSpecs,turretSpecs);
         drawnow;
-
+        if saveMedia
+            % Grab frame for video
+            frame = getframe(h.Figure);
+            writeVideo(vidObj,frame);
+        end
+        
     end
 end
 
@@ -238,7 +282,20 @@ for w = 1:numel(walls)
             delete(h_a2r);
         end
         [h,h_a2r] = setupTurretAndTarget(h,targetSpecs,range,turretSpecs,wall);
+        % Update information
+        txt = dispTurretAndTargetInfo(txt,range,targetSpecs,turretSpecs);
         drawnow;
-
+        if saveMedia
+            % Grab frame for video
+            frame = getframe(h.Figure);
+            writeVideo(vidObj,frame);
+        end
+        
     end
+end
+
+%% Close media
+if saveMedia
+    % Close video obj
+    close(vidObj);
 end
