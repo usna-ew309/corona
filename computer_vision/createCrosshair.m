@@ -136,18 +136,52 @@ tPos_n = 0:-dtick:lims(1);
 tPos_p(1) = [];
 tPos_n(1) = [];
 tPos = [sort(tPos_n),tPos_p];
+for i = 1:numel(hTickIDX)
+    j = hTickIDX(i);
+    str = sprintf('%.2f%s',tPos(i),sUnits);
+    verts = get(objs(j),'Vertices');
+    switch sign(tPos(i))
+        case 1
+            XY = [verts(2,:); verts(3,:)].';
+            hAlign = 'Left';
+            vAlign = 'Middle';
+        case -1
+            XY = [verts(1,:); verts(4,:)].';
+            hAlign = 'Right';
+            vAlign = 'Middle';
+        otherwise
+            error('HELP ME');
+    end
+    objs(end+1) = text(h_a2r,mean(XY(1,:)),mean(XY(2,:)),str,...
+        'HorizontalAlignment',hAlign,'VerticalAlignment',vAlign,...
+        'FontSize',8,'Color',color);%,'Rotation',90);
+end
+
+% Vertical text
+tPos_p = 0: dtick:lims(2);
+tPos_n = 0:-dtick:lims(1);
+tPos_p(1) = [];
+tPos_n(1) = [];
+tPos = [sort(tPos_n),tPos_p];
 for i = 1:numel(vTickIDX)
     j = vTickIDX(i);
     str = sprintf('%.2f%s',tPos(i),sUnits);
     verts = get(objs(j),'Vertices');
     switch sign(tPos(i))
         case 1
-            XY = [verts(2,:); verts(3,:)].';
-            hAligh = 'Left';
+            XY = [verts(1,:); verts(2,:)].';
+            hAlign = 'Right';
+            vAlign = 'Middle';
         case -1
-            XY = [verts(1,:); verts(4,:)].';
-            hAligh = 'Right'
+            XY = [verts(3,:); verts(4,:)].';
+            hAlign = 'Left';
+            vAlign = 'Middle';
         otherwise
             error('HELP ME');
     end
+    objs(end+1) = text(h_a2r,mean(XY(1,:)),mean(XY(2,:)),str,...
+        'HorizontalAlignment',hAlign,'VerticalAlignment',vAlign,...
+        'FontSize',8,'Color',color,'Rotation',90);
 end
+
+
