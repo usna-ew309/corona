@@ -55,17 +55,17 @@ function [SSE,varargout] = sendCmdtoDcMotor(mode,control_params,varargin)
 
 
 % handle additional input quantities
-if nargin == 5
+if nargin == 3
     t = varargin{1};
     % initial condition
     theta0 = 0;
     dtheta0 = 0;
     i0 = 0;
     q0 = [theta0;dtheta0;i0;0];
-elseif nargin == 6
+elseif nargin == 4
     t = varargin{1};
     q0 = varargin{2};
-elseif nargin > 6
+elseif nargin > 4
     error('Too many inputs')
 else
     t = 0:.01:10;
