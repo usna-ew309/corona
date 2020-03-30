@@ -29,7 +29,7 @@ for ii = 1:4
 [filename,pathname] = uigetfile('*.xlsx','Select appropriate data file');
 
 %parse the numerical, text, and raw data 
-[num,txt,raw] = xlsread(filename);
+[num,txt,raw] = xlsread([pathname filename]);
 
 %assign variable to data
 data.x_pix = num(:,1);
