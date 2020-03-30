@@ -7,7 +7,11 @@ function [h_a2r,objs] = createCrosshair(varargin)
 %
 %   [h_a2r] = CREATECROSSHAIR(axs,lims)
 %
+%       lims = [lower, upper];
+%
 %   [h_a2r] = CREATECROSSHAIR(axs,lims,dtick)
+%
+%       dtick - scalar value 0:dtick:lims(2) & 0:-dtick:lims(1)...
 %
 %   [h_a2r] = CREATECROSSHAIR(axs,lims,dtick,units)
 %
@@ -16,6 +20,8 @@ function [h_a2r,objs] = createCrosshair(varargin)
 %   [h_a2r] = CREATECROSSHAIR(axs,lims,dtick,units,color)
 %
 %   [h_a2r] = CREATECROSSHAIR(axs,lims,dtick,units,color,width)
+%
+%       width - scalar width of "lines"
 %
 %   [h_a2r,objs] = CREATECROSSHAIR(___)
 %   
@@ -29,7 +35,7 @@ axs = gca;
 lims = [-50, 50];
 dtick = 10;
 units = 'centimeters';
-color = 'b';
+color = 'w';
 width = 1;
 
 % Parse input(s)
@@ -51,7 +57,11 @@ end
 if nargin > 5
     width = varargin{6};
 end
-hold(axs,'on');
+
+switch lower( get(axs,'type') )
+    case 'axes'
+        hold(axs,'on');
+end
 
 %% Convert to standard units
 switch lower( units )
@@ -80,6 +90,7 @@ mm_width = width.*conversion;
 
 %% Render crosshair and ticks
 h_a2r = triad('Parent',axs,'Scale',0.75*diff(mm_lims)/2,'LineWidth',1.5);
+hideTriad(h_a2r);
 
 faces = 1:4;
 hVerts = [...
@@ -184,4 +195,5 @@ for i = 1:numel(vTickIDX)
         'FontSize',8,'Color',color,'Rotation',90);
 end
 
-
+%% Update tag(s)
+set(h_a2r,'Tag','Crosshair');

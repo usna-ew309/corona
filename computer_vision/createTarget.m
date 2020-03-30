@@ -175,3 +175,6 @@ Z = zeros(size(X));
 h_a2r = triad('Parent',axs,'Scale',0.75*r,'LineWidth',1.5);
 ptc = warp( X,Y,Z,cPatch);
 set(ptc,'Parent',h_a2r);
+
+%% Update tag(s)
+set(h_a2r,'Tag','Target');

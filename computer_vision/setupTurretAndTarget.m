@@ -9,6 +9,8 @@ function varargout = setupTurretAndTarget(h,varargin)
 %       targetSpecs.VerticalBias --- change in relative height 
 %       targetSpecs.Color ---------- target color [Dark Orange]
 %       targetSpecs.Wobble --------- target wobble [0]
+%       targetSpecs.Shape ---------- string argument describing target
+%                                    shape (e.g. 'circle')
 %
 %   h = SETUPTURRETANDTARGET(h,targetSpecs,range,turretSpecs)
 %
@@ -30,7 +32,7 @@ narginchk(3,5);
 % Set defaults
 wall = 'NE';
 wobble = deg2rad(10); % TODO - allow user to specify target wobble
-color = 'Light Orange';
+color = 'Dark Orange';
 
 % Parse input(s)
 if nargin > 1
@@ -54,7 +56,7 @@ if ~isstruct(targetSpecs)
     warning('"targetSpecs" must be defined as a structured array.'); 
     targetSpecs = struct;
 end
-fieldNames = {'Diameter','HorizontalBias','VerticalBias','Color','Wobble'};
+fieldNames = {'Diameter','HorizontalBias','VerticalBias','Color','Wobble','Shape'};
 bin = isfield(targetSpecs,fieldNames);
 for i = 1:3
     if ~bin(i)
@@ -67,7 +69,9 @@ end
 if ~bin(5) 
     targetSpecs.Wobble = wobble;
 end
-
+if ~bin(6) 
+    targetSpecs.Shape = 'Circle';
+end
 %% Check turret specs
 if ~isstruct(turretSpecs)
     warning('"turretSpecs" must be defined as a structured array.'); 
@@ -124,9 +128,22 @@ target.XYZ(3) = (targetSpecs.VerticalBias + turretSpecs.VerticalOffset);
 target.diameter = targetSpecs.Diameter;
 target.color = targetSpecs.Color;
 target.wobble = targetSpecs.Wobble;
-h_a2r = createTarget(h.Frames.h_r2b,'Circle',target.diameter,target.color);
+target.shape = targetSpecs.Shape;
+
+% Allow user to select a "shape" or a "crosshair"
+switch lower( target.shape )
+    case 'crosshair'
+        lims = [-50,50];
+        dtick = 10;
+        units = 'Centimeters';
+        width = 1;
+        [h_a2r] = createCrosshair(h.Frames.h_r2b,lims,dtick,units,target.color,width);
+    otherwise
+        h_a2r = createTarget(h.Frames.h_r2b,targetSpecs.Shape,target.diameter,target.color);
+end
 h_a2r = placeTarget(h_a2r,target.XYZ,target.theta,target.wobble);
 H_a2r = get(h_a2r,'Matrix');
+
 % -> Barrel "end" frame relative to target "aim" frame
 H_e2a = Tz(range)*Tx(-targetSpecs.HorizontalBias)*Ty(-targetSpecs.VerticalBias)*Rx(-pi/2);
 % -> Barrel frame relative to the room frame
