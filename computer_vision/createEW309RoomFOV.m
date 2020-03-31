@@ -152,6 +152,12 @@ h.Light_Height = delta_H_mm;
 hgALL = findobj(h.Figure,'Type','hgtransform');
 hideTriad(hgALL);
 
+%% Increase x/y limits
+xx = xlim(h.Axes);
+yy = ylim(h.Axes);
+xlim(h.Axes,3*xx);
+ylim(h.Axes,2*yy);
+
 %% Show figure
 set(h.Figure, 'Visible','on'); % Show figure
 drawnow;

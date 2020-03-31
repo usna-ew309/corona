@@ -1,6 +1,6 @@
 function im = getCalibrationImage(varargin)
-% GETCALIBRATIONIMAGE creates a simulated image of a calibration grid on a 
-% chalkboard.
+% GETCALIBRATIONIMAGE creates a simulated image of a calibration grid on 
+% the SW chalkboard of the Ri080.
 %   im = GETCALIBRATIONIMAGE(range) creates a simulated image of a
 %   calibration grid on an EW309 classroom chalkboard. The variable "range"
 %   must be specified in *centimeters*.
@@ -12,27 +12,31 @@ function im = getCalibrationImage(varargin)
 %
 %   M. Kutzer, 30Mar2020, USNA
 
-persistent h_persistent
+%% Define global FOV simulation
+% Yes, I realize that globals are generally lazy coding, but I am doing
+% this to (a) simplify the function syntax, and (b) speed up simplified
+% execution.
+global hFOV_global
 
 %% Check input(s)
 narginchk(1,2);
 
 if nargin == 1
     range = varargin{1};
-    usePersistent = false;
-    if isstruct(h_persistent)
-        if isfield(h_persistent,'Figure')
-            if ishandle(h_persistent.Figure)
-                usePersistent = true;
+    useGlobal = false;
+    if isstruct(hFOV_global)
+        if isfield(hFOV_global,'Figure')
+            if ishandle(hFOV_global.Figure)
+                useGlobal = true;
             end
         end
     end
     
-    if usePersistent
-        h = h_persistent;
+    if useGlobal
+        h = hFOV_global;
     else
         h = createEW309RoomFOV('Ri080');
-        h_persistent = h;
+        hFOV_global = h;
     end
     set(h.Figure,'Visible','off');
 end
@@ -46,11 +50,11 @@ end
 range = 10*range;
 
 %% Get image
-walls    = {'NE','NW','SW','SE'};
-
+walls = {'NE','NW','SW','SE'};
+% Set room defaults
 switch h.Room
     case 'Ri078'
-        
+        error('Offset settings for Ri078 are not defined, please use Ri080.');
     case 'Ri080'
         hBias = 0;
         vBias = h.H_b2c(2,4);   % Align the target with the camera

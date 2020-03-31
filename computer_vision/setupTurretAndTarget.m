@@ -141,8 +141,12 @@ switch lower( target.shape )
     otherwise
         h_a2r = createTarget(h.Frames.h_r2b,targetSpecs.Shape,target.diameter,target.color);
 end
-h_a2r = placeTarget(h_a2r,target.XYZ,target.theta,target.wobble);
+% Place target without wobble (to get transformation)
+h_a2r = placeTarget(h_a2r,target.XYZ,target.theta,0);
+% Get transformation
 H_a2r = get(h_a2r,'Matrix');
+% Place target again *with* wobble
+h_a2r = placeTarget(h_a2r,target.XYZ,target.theta,target.wobble);
 
 % -> Barrel "end" frame relative to target "aim" frame
 H_e2a = Tz(range)*Tx(-targetSpecs.HorizontalBias)*Ty(-targetSpecs.VerticalBias)*Rx(-pi/2);
