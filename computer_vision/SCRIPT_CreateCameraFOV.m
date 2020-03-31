@@ -43,6 +43,9 @@ clc
 %% Set save media flag
 saveMedia = false;
 
+%% Set replace figures flag
+replaceFigures = false;
+
 %% Load Camera Calibration
 load( fullfile('calibration','data','cameraParams_20200312-evangelista-1.mat') );
 
@@ -108,7 +111,11 @@ for i = 1:2
     end
     
     drawnow;
-    saveas(sim.Figure,sprintf('Camera FOV, %s.fig',roomIDs{i}),'fig');
+    
+    if replaceFigures
+        % Save camera FOV figure
+        saveas(sim.Figure,sprintf('Camera FOV, %s.fig',roomIDs{i}),'fig');
+    end
     
     delete(sim.Figure);
 end
