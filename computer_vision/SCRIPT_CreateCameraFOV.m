@@ -32,6 +32,10 @@
 %
 %   M. Kutzer, 18Mar2020, USNA
 
+% Updates
+%   30Mar2020 - Removed "correction" to better align the target center with
+%               the center of the image when the target is aligned with the
+%               camera z-axis
 clear all
 close all
 clc
@@ -56,9 +60,11 @@ for i = 1:2
     set(sim.Axes,  'Tag',sprintf(  'Axes, FOV %s',roomIDs{i}));
     
     % Attempt "correction"
+    %{
     pA(1:2) = [-84,-100]./fliplr(imageResolution);
     pA(3:4) = [1.37, 1.37];
     set(sim.Axes,'Position',pA);
+    %}
     
     % Adjust x and y limits?
     xlim(sim.Axes,xlim(sim.Axes)*5);
