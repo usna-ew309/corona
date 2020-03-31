@@ -32,6 +32,24 @@ function [SSE,varargout] = sendCmdtoDcMotor(mode,control_params,varargin)
 %           integral error, e.g.
 %           theta0 = 0; dtheta=0; i0 = 0; e0 = 0; q0 = [theta0;dtheta0;i0;e0]
 %
+%   Output: 
+%       SSE: the position error, assuming the response came to rest (i.e.
+%            reached steady-state). SSE is computed using the last 10% of
+%            the complete response
+%
+%   Optional Outputs (in order or output):
+%       time: Time array used in the simulation. 
+%       theta: Angular position in radians at time array points given in
+%              the array time
+%       omega: Angular velocity in radians/secong evaluates at the
+%              instances in time denoted by the time array output, time
+%       duty_cycle: The duty cycle represented as a fraction [-1,1] applied
+%              at the time instances given be the time array output, time
+%       eint: The integral of the position error (rad*s) evaluated at the
+%             time points given in the output time array, time.
+%
+%
+%
 %
 % Example usage (closed-loop control):
 %   cntrlprms.despos = pi/4;
@@ -39,7 +57,7 @@ function [SSE,varargout] = sendCmdtoDcMotor(mode,control_params,varargin)
 %   cntrlprms.Ki = 0.02;
 %   cntrlprms.Kd = 0.02;
 %   t = 0:.05:10;
-%   [SSE,t,theta,omega,eint] = sendCmdtoDcMotor('closed',cntrlprms,t);
+%   [SSE,t,theta,omega,dc,eint] = sendCmdtoDcMotor('closed',cntrlprms,t);
 % OR
 %   SSE = sendCmdtoDcMotor('closed',cntrlprms,t);
 %
@@ -47,7 +65,7 @@ function [SSE,varargout] = sendCmdtoDcMotor(mode,control_params,varargin)
 % Example usage (open-loop step input):
 %   cntrlprms.stepPWM = 0.45; % 45% duty cycle step input
 %   t = 0:.05:10;
-%   [SSE,t,theta,omega,eint] = sendCmdtoDcMotor('step',cntrlprms,t);
+%   [SSE,t,theta,omega,dc,eint] = sendCmdtoDcMotor('step',cntrlprms,t);
 % OR
 %   SSE = sendCmdtoDcMotor('step',cntrlprms,t,[0;0;0;0]);
 %
@@ -105,15 +123,30 @@ switch mode
         lng = ceil(0.05*length(Q(:,1))); % last 5% of data points
         SSE = control_params.despos - mean(Q(end-lng:end,1));
         
+        % reconstruct control signal
+        err = control_params.despos - Q(:,1); % position error
+ 
+        % PID controller
+        dc = control_params.Kp*err + control_params.Ki*Q(:,4) - control_params.Kd*Q(:,2);
+        dc(dc>1) = 1;
+        dc(dc<-1) = -1;
+        
     case 'step'
         motorParams.case = 2; % step input case
+        if abs(control_params.stepPWM)>1
+            error('PWM Duty cycle can not have a magnitude greater than 1')
+        end
         % integrate EOM
         [~,Q] = ode45(@MotDynHF_sc,t,q0,[],motorParams,control_params);
         
         % steady-state error (non-existent for step input)
         SSE = NaN;
         
-        
+        % reconstruct control signal
+        dc = zeros(size(Q(:,1)));
+        dc(t>=1) = control_params.stepPWM;
+    otherwise
+        error('Invalid operating mode. Operating mode must be step or closed');
 end
 
 % % % plot results
@@ -129,7 +162,8 @@ end
 out(:,1) = t; % time vector
 out(:,2) = Q(:,1); % theta
 out(:,3) = Q(:,2); % omega
-out(:,4) = Q(:,4); % error integral
+out(:,4) = dc;     % duty cycle
+out(:,5) = Q(:,4); % error integral
 
 
 % Optional outputs
@@ -233,6 +267,12 @@ switch params.case % test cases for simulation
             dc = cntrlprms.stepPWM;
         end
         err = 0;
+        if dc>1.0
+            dc = 1.0;
+        elseif dc<-1.0
+            dc = -1.0;
+        end
+        
     case 3 % closed loop control, for students
         err = cntrlprms.despos - Q(1);
  
