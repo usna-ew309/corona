@@ -136,6 +136,7 @@ n_order = 1; %choose either 1st or 2nd order
 px = polyfit(dist,mean_x,n_order);
 py = polyfit(dist,mean_y,n_order);
 
+
 pSp = polyfit(dist,S_P,1);
 
 %create the best fit line (or curve) based on polynomial fit
@@ -162,3 +163,6 @@ subplot(3,1,3)
 plot(dist,S_P,'*',newdist,new_SP)
 xlabel('range (cm)','interpreter','latex');
 ylabel('Precision error (cm)','interpreter','latex');
+
+
+save('Ballistics_Process_stats','mean_x','px','mean_y','py','Sx','Sy','dist')
