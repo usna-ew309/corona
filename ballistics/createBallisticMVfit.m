@@ -39,6 +39,8 @@ for i = 1:n
     
     muCELL{i}    = mean([x,y]);
     SigmaCELL{i} = cov([x,y]);
+    
+    cov([x,y])
 end
 
 %% Reformat statistics for fit parameters
@@ -53,11 +55,26 @@ for i = 1:n
 end
 
 %% Fit to data
-MVfit.Axis1 = polyfit(z,Sigma.Axis(:,1),1);
-MVfit.Axis2 = polyfit(z,Sigma.Axis(:,2),1);
+pfit01 = pinv([z.^1]);             % 1st order polynomial fit with 0 offset
+pfit02 = pinv([z.^2, z.^1]);       % 2nd order polynomial fit with 0 offset
+pfit03 = pinv([z.^3, z.^2, z.^1]); % 3rd order polynomial fit with 0 offset
+
+% Force 0-offset
+MVfit.Axis1 = [pfit01*Sigma.Axis(:,1); 0].'; %polyfit(z,Sigma.Axis(:,1),1);
+% Force 0-offset
+MVfit.Axis2 = [pfit01*Sigma.Axis(:,2); 0].'; %polyfit(z,Sigma.Axis(:,2),1);
+% Allow non-zero offset
 MVfit.Angle = polyfit(z,Sigma.Angle(:,1),1);
-MVfit.MeanX = polyfit(z,Sigma.mu(:,1),1);
-MVfit.MeanY = polyfit(z,Sigma.mu(:,2),1);
+% Force 0-offset
+MVfit.MeanX = [pfit02*mu(:,1); 0].'; %polyfit(z,mu(:,1),2);
+% Force 0-offset
+MVfit.MeanY = [pfit02*mu(:,2); 0].'; %polyfit(z,mu(:,2),2);
+
+%% Append actual data points for debugging
+%{
+MVfit.Sigma = Sigma;
+MVfit.mu = mu;
+%}
 
 %% Plot result(s)
 if plotsON
@@ -68,7 +85,9 @@ if plotsON
     
     m = numel(ylbls);
     for i = 1:m
-        axs(i) = subplot(4,1,i,'Parent',fig);
+        axs(i) = subplot(m,1,i,'Parent',fig);
+        hold(axs(i),'on');
+        
         xlabel(axs(i),'Distance (z)');
         ylabel(axs(i),ylbls{i});
         
@@ -76,9 +95,13 @@ if plotsON
         fit(i) = plot(axs(i),zFIT,pFIT,'-b','LineWidth',1.5);
     end
     
-    plt(1) = plot(axs(i),z,Sigma.Axis(:,1),'*m','MarkerSize',8);
-    plt(2) = plot(axs(i),z,Sigma.Axis(:,2),'*m','MarkerSize',8);
-    plt(3) = plot(axs(i),z,Sigma.Angle(:,1),'*m','MarkerSize',8);
-    plt(4) = plot(axs(i),z,mu(:,1),'*m','MarkerSize',8);
-    plt(5) = plot(axs(i),z,mu(:,2),'*m','MarkerSize',8);
+    plt(1) = plot(axs(1),z,Sigma.Axis(:,1),'*m','MarkerSize',8);
+    plt(2) = plot(axs(2),z,Sigma.Axis(:,2),'*m','MarkerSize',8);
+    plt(3) = plot(axs(3),z,Sigma.Angle(:,1),'*m','MarkerSize',8);
+    plt(4) = plot(axs(4),z,mu(:,1),'*m','MarkerSize',8);
+    plt(5) = plot(axs(5),z,mu(:,2),'*m','MarkerSize',8);
+    
+    set(fig,'Units','Normalized','Position',[0,0,0.75,0.75]);
+    centerfig(fig);
+    saveas(fig,'MVfit.png','png');
 end
