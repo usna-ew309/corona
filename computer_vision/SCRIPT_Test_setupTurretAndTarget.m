@@ -61,6 +61,7 @@ end
 %}
 
 %% Test walls and range shifts
+%{
 hBias = 0;
 vBias = -1*12*25.4;
 hOffset = 0;
@@ -98,8 +99,10 @@ for w = 1:numel(walls)
         
     end
 end
+%}
 
 %% Test walls and theta shifts
+%{
 hBias = 0;
 vBias = -1*12*25.4;
 hOffset = 0;
@@ -137,6 +140,7 @@ for w = 1:numel(walls)
         
     end
 end
+%}
 
 %% Test walls and vertical offset shifts
 hBias = 0;
@@ -216,6 +220,7 @@ for w = 1:numel(walls)
     end
 end
 
+%{
 %% Test walls and vertical bias shifts
 hBias = 0;
 %vBias = -1*12*25.4;
@@ -293,7 +298,7 @@ for w = 1:numel(walls)
         
     end
 end
-
+%}
 %% Close media
 if saveMedia
     % Close video obj

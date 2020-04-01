@@ -324,7 +324,7 @@ end
 
 
 function Tf = frictionNL_sc(omega,params)
-
+% compute nonlinear friction term in DC motor model
 Tf = (params.friction.a0 + params.friction.a1)/params.friction.del*omega;
 
 indmd = omega <0 & omega > -params.friction.del;
@@ -337,3 +337,12 @@ indm = omega <= -params.friction.del;
 Tf(indm) = -(params.friction.a3 + params.friction.a4*exp( - (params.friction.a5*abs( omega(indm) + params.friction.del) )));
 
 end
+
+% function [position,isterminal,direction] = SSEEventsFcn(t,Q)
+% 
+% if t>2
+%     position = 
+% end
+% isterminal = 1;  % Halt integration 
+% direction = 0;   % The zero can be approached from either direction 
+% end
