@@ -105,6 +105,13 @@ filenames{3} = {...
 dataFiles(3).Directory = {};
 dataFiles(3).Filenames = {};
 
+toolboxContent{4} = 'support';
+filenames{4} = {...
+    'EW309coronaUpdate.m',...
+    'EW309coronaVer.m'};
+dataFiles(4).Directory = {};
+dataFiles(4).Filenames = {};
+
 %% Migrate files
 for tCon = 1:numel(toolboxContent)
     % Check if subdirectoy is a folder
@@ -165,7 +172,7 @@ for tCon = 1:numel(toolboxContent)
                 subfilename = dataFiles(tCon).Filenames{i}{j};
                 fprintf('\t\t%s...',subfilename);
                 
-                source = fullfile(subfolder,subfilename);
+                source = fullfile(toolboxContent{tCon},subfolder,subfilename);
                 [isCopy,msg,msgID] = copyfile(source,nDestination,'f');
                 
                 if isCopy == 1
