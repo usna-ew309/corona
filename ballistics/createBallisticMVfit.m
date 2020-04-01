@@ -63,8 +63,8 @@ pfit03 = pinv([z.^3, z.^2, z.^1]); % 3rd order polynomial fit with 0 offset
 MVfit.Axis1 = [pfit01*Sigma.Axis(:,1); 0].'; %polyfit(z,Sigma.Axis(:,1),1);
 % Force 0-offset
 MVfit.Axis2 = [pfit01*Sigma.Axis(:,2); 0].'; %polyfit(z,Sigma.Axis(:,2),1);
-% Allow non-zero offset
-MVfit.Angle = polyfit(z,Sigma.Angle(:,1),1);
+% Force 0-offset
+MVfit.Angle = [pfit03*Sigma.Angle(:,1); 0].'; %polyfit(z,Sigma.Angle(:,1),1);
 % Force 0-offset
 MVfit.MeanX = [pfit02*mu(:,1); 0].'; %polyfit(z,mu(:,1),2);
 % Force 0-offset
@@ -103,5 +103,6 @@ if plotsON
     
     set(fig,'Units','Normalized','Position',[0,0,0.75,0.75]);
     centerfig(fig);
+    drawnow
     saveas(fig,'MVfit.png','png');
 end

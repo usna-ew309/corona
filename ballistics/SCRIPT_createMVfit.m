@@ -1,4 +1,4 @@
-% SCRIPT_SaveMVfit
+% SCRIPT_createMVfit
 % This function processes the MVfit information and saves a file containing
 % the fit paramters.
 %
@@ -23,15 +23,23 @@ for i = 1:numel(Z)
     xlabel(axs,'x (cm)');
     ylabel(axs,'y (cm)');
     title(axs,sprintf('Distance %.2fcm',Z{i}));
-    
-    plt(1) = plot(axs,X{i},Y{i},'ob');
+
     
     range = Z{i};
     nShots = numel(X{i});
     
-    [x,y] = fireShots(range,10*nShots);
-    plt(2) = plot(axs,x,y,'xg');
+    [x,y] = fireShots(range,100*nShots);
+    plt(1) = plot(axs,x,y,'xg');
     
-    [x,y] = getShotPattern(range,10*nShots);
-    plt(3) = plot(axs,x,y,'+m');
+    [x,y] = getShotPattern(range,100*nShots);
+    plt(2) = plot(axs,x,y,'+m');
+
+    plt(3) = plot(axs,X{i},Y{i},'ob','MarkerFaceColor','b','MarkerSize',8);
+    legend(axs,{'Decoupled Fit','Coupled Fit','Collected Data'},'Location','northeastoutside');
+    
+    set(fig,'Units','Normalized','Position',[0,0,0.75,0.75]);
+    centerfig(fig);
+    drawnow
+    fname = sprintf('%dcentimeters.png',range);
+    saveas(fig,fname,'png');
 end
