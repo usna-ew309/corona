@@ -36,6 +36,7 @@ obj(1) = imshow(im,'Parent',axs(end));
 set(axs(end),'Visible','on');
 xlabel(axs(end),'x (pixels)');
 ylabel(axs(end),'y (pixels)');
+drawnow;
 
 %% b.02
 range = 250;    % Range in centimeters
@@ -48,10 +49,11 @@ obj(end+1) = imshow(im,'Parent',axs(end));
 set(axs(end),'Visible','on');
 xlabel(axs(end),'x (pixels)');
 ylabel(axs(end),'y (pixels)');
+drawnow;
 
 %% b.03
 range = 250;    % Range in centimeters
-im = getCalibrationImage(range,nShots);
+im = getCalibrationImage(range);
 
 fig(end+1) = figure('Name','getCalibrationImage.m');
 axs(end+1) = axes('Parent',fig(end));
@@ -59,6 +61,7 @@ obj(end+1) = imshow(im,'Parent',axs(end));
 set(axs(end),'Visible','on');
 xlabel(axs(end),'x (pixels)');
 ylabel(axs(end),'y (pixels)');
+drawnow;
 
 %% c.01
 uniform_t     = linspace(0,60,500).';           % Uniform time  (made-up, not real, for test only)
@@ -86,3 +89,4 @@ axs(end+1) = axes('Parent',fig(end));
 obj(end+1) = plot(axs(end),time,theta,'b');
 xlabel(axs(end),'Time (s)');
 ylabel(axs(end),'Angle (radians)');
+drawnow;
