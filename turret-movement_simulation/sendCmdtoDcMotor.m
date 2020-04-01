@@ -1,10 +1,17 @@
 function [SSE,varargout] = sendCmdtoDcMotor(mode,control_params,varargin)
-% sendCmdtoDcMotor emulates the behavior of the EW309 turret platforms
+% SENDCMDTODCMOTOR emulates the behavior of the EW309 turret platforms
 % under various user-specified operational conditions. The Primary output
 % of the function is the steady-state error of the closed-loop system.
 % However, optional input and output arguments can be specified to
 % configure the system to simulate various open- or closed-loop
 % configurations.
+%   SSE = SENDCMDTODCMOTOR(mode,control_params)
+%
+%   SSE = SENDCMDTODCMOTOR(mode,control_params,time)
+%
+%   SSE = SENDCMDTODCMOTOR(mode,control_params,time,q0)
+%
+%   [SSE,time,theta,omega,duty_cycle,eint] = SENDCMDTODCMOTOR(___)
 %
 %   Inputs:
 %       mode: control operational mode: 'step' or 'closed'
@@ -37,7 +44,7 @@ function [SSE,varargout] = sendCmdtoDcMotor(mode,control_params,varargin)
 %            reached steady-state). SSE is computed using the last 10% of
 %            the complete response
 %
-%   Optional Outputs (in order or output):
+%   Optional Outputs (in order of output):
 %       time: Time array used in the simulation. 
 %       theta: Angular position in radians at time array points given in
 %              the array time
