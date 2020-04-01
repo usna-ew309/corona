@@ -17,6 +17,14 @@ function im = getTargetImage(varargin)
 %
 %   M. Kutzer, 31Mar2020, USNA
 
+% TODO - address relative movement use case
+%   (1) Students get an initial image (theta_init)
+%   (2) Students calculate a relative angle (theta_desired)
+%   (3) Students run their controller to get a relative angle 
+%       (theta_actual)
+%   (4) The turret needs to move *relative* to its initial orientation
+%       (theta_init + theta_actual)
+
 %% Define global FOV simulation
 % Yes, I realize that globals are generally lazy coding, but I am doing
 % this to (a) simplify the function syntax, and (b) speed up simplified
