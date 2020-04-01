@@ -50,14 +50,13 @@ end
 range = 10*range;
 
 %% Get image
-walls = {'NE','NW','SW','SE'};
 % Set room defaults
+%{
+walls = {'NE','NW','SW','SE'};
 switch h.Room
     case 'Ri078'
         error('Offset settings for Ri078 are not defined, please use Ri080.');
     case 'Ri080'
-        hBias = 0;
-        vBias = h.H_b2c(2,4);   % Align the target with the camera
         hOffset = -6*12*25.4;
         vOffset = 0.5*25.4;
         theta = 0;
@@ -66,14 +65,6 @@ switch h.Room
         error('Room "%s" is not recognized.',h.Room);
 end
 
-% Define target specs
-targetSpecs.Diameter = 5*25.4;      % Unused
-targetSpecs.HorizontalBias = hBias; % Horizontal bias
-targetSpecs.VerticalBias = vBias;   % Vertical bias
-targetSpecs.Color = 'w';            % Crosshair color
-targetSpecs.Wobble = 0;             % Wobble
-targetSpecs.Shape = 'Crosshair';    % Type
-%targetSpecs.Shape = 'Circle';
 
 % Define turret specs
 turretSpecs.HorizontalOffset = hOffset;
@@ -81,6 +72,19 @@ turretSpecs.VerticalOffset = vOffset;
 turretSpecs.Angle = theta;
 
 wall = walls{w};
+%}
+[turretSpecs,wall] = getDefaultsEW309RoomFOV(h,0);
+
+% Define target specs
+hBias = 0;              % Align the target with the camera
+vBias = h.H_b2c(2,4);   % Align the target with the camera
+
+targetSpecs.Diameter = 5*25.4;      % Unused
+targetSpecs.HorizontalBias = hBias; % Horizontal bias
+targetSpecs.VerticalBias = vBias;   % Vertical bias
+targetSpecs.Color = 'w';            % Crosshair color
+targetSpecs.Wobble = 0;             % Wobble
+targetSpecs.Shape = 'Crosshair';    % Type
 
 [hNEW,h_a2r] = setupTurretAndTarget(h,targetSpecs,range,turretSpecs,wall);
 drawnow;

@@ -1,13 +1,19 @@
 function im = getTargetImage(varargin)
 % GETTARGETIMAGE creates a simulated image of a target on the chalkboard of
 % Ri080. 
-%   im = GETTARGETIMAGE(range)
+%   im = GETTARGETIMAGE(range) creates a simulated image of a target on an
+%   EW309 classroom chalkboard. The variable "range" must be specified in 
+%   *centimeters*.
 %
-%   im = GETTARGETIMAGE(range,angle)
+%   im = GETTARGETIMAGE(range,angle) creates a simulated image of a target
+%   with the turret rotated by a specified angle. The variable "angle" must
+%   be specified in *radians*.
 %
-%   im = GETTARGETIMAGE(range,angle,targetSpecs)
+%   im = GETTARGETIMAGE(range,angle,targetSpecs) creates a target matching 
+%   a set of target specifications. Use "createTargetSpecs.m".
 %
-%   im = GETTARGETIMAGE(h,range,angle,targetSpecs)
+%   im = GETTARGETIMAGE(h,range,angle,targetSpecs) uses a pre-defined FOV
+%   specified using the structured array h. Use "createEW309RoomFOV.m".
 %
 %   M. Kutzer, 31Mar2020, USNA
 
@@ -24,7 +30,7 @@ narginchk(1,4);
 targetSpecs0.Diameter = 5*25.4;         % Diameter in millimeters
 targetSpecs0.HorizontalBias = 0;        % Horizontal bias in millimeters
 targetSpecs0.VerticalBias = 0;          % Vertical bias in millimeters
-targetSpecs0.Color = 'Dark Orange';     % Crosshair color
+targetSpecs0.Color = 'Dark Orange';     % Target color
 targetSpecs0.Wobble = rand*deg2rad(10); % Wobble in radians
 targetSpecs0.Shape = 'Circle';          % Target shape
 
@@ -92,19 +98,22 @@ for i = 1:numel(bin)
 end
 
 %% Set room defaults
+%{
 walls = {'NE','NW','SW','SE'};
 % Set room defaults
 switch h.Room
     case 'Ri078'
         error('Offset settings for Ri078 are not defined, please use Ri080.');
     case 'Ri080'
-        turretSpecs.HorizontalOffset = -6*12*25.4;
-        turretSpecs.VerticalOffset = 0.5*25.4;
+        turretSpecs.HorizontalOffset = -6.0*12*25.4;
+        turretSpecs.VerticalOffset   =  0.5*25.4;
         turretSpecs.Angle = angle;
         wall = walls{3};
     otherwise
         error('Room "%s" is not recognized.',h.Room);
 end
+%}
+[turretSpecs,wall] = getDefaultsEW309RoomFOV(h,angle);
 
 %% Place target
 [hNEW,h_a2r] = setupTurretAndTarget(h,targetSpecs,range,turretSpecs,wall);

@@ -11,7 +11,7 @@ function MVfit = createBallisticMVfit(X,Y,Z)
 %   M. Kutzer, 31Mar2020, USNA
 
 %% Set debug flag(s)
-plotsON = true;
+plotsON = false;
 
 %% Check input(s)
 narginchk(3,3);
@@ -39,8 +39,6 @@ for i = 1:n
     
     muCELL{i}    = mean([x,y]);
     SigmaCELL{i} = cov([x,y]);
-    
-    cov([x,y])
 end
 
 %% Reformat statistics for fit parameters

@@ -24,6 +24,8 @@ function varargout = setupTurretAndTarget(h,varargin)
 %
 %   [h,h_a2r] = SETUPTURRETANDTARGET(___)
 %
+%   [h,h_a2r,objs] = SETUPTURRETANDTARGET(___)
+%
 %   M. Kutzer, 28Mar2020, USNA
 
 %% Check input(s)
@@ -137,9 +139,9 @@ switch lower( target.shape )
         dtick = 10;
         units = 'Centimeters';
         width = 1;
-        [h_a2r] = createCrosshair(h.Frames.h_r2b,lims,dtick,units,target.color,width);
+        [h_a2r,objs] = createCrosshair(h.Frames.h_r2b,lims,dtick,units,target.color,width);
     otherwise
-        h_a2r = createTarget(h.Frames.h_r2b,targetSpecs.Shape,target.diameter,target.color);
+        [h_a2r,objs] = createTarget(h.Frames.h_r2b,targetSpecs.Shape,target.diameter,target.color);
 end
 % Place target without wobble (to get transformation)
 h_a2r = placeTarget(h_a2r,target.XYZ,target.theta,0);
@@ -165,4 +167,7 @@ if nargout > 0
 end
 if nargout > 1
     varargout{2} = h_a2r;
+end
+if nargout > 2
+    varargout{3} = objs;
 end

@@ -7,6 +7,9 @@
 %% Format the ballistics data
 SCRIPT_FormatBallisticsData;
 
+%% Save media flag 
+saveMedia = false;
+
 %% Calculate the fit
 MVfit = createBallisticMVfit(X,Y,Z);
 
@@ -40,6 +43,8 @@ for i = 1:numel(Z)
     set(fig,'Units','Normalized','Position',[0,0,0.75,0.75]);
     centerfig(fig);
     drawnow
-    fname = sprintf('%dcentimeters.png',range);
-    saveas(fig,fname,'png');
+    if saveMedia
+        fname = sprintf('%dcentimeters.png',range);
+        saveas(fig,fname,'png');
+    end
 end
