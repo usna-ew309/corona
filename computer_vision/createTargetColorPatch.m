@@ -40,7 +40,8 @@ else
 end
 
 %% Load statistics
-load( fullfile('targets','ColorStats.mat') );
+%load( fullfile('targets','ColorStats.mat') );
+load('ColorStats.mat');
 
 %% Assign color statistics
 switch lower(color)

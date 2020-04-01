@@ -26,47 +26,44 @@ clc
 EW309coronaVer;
 
 %% b.01
-fig(1) = figure('Name','getTargetImage.m');
-axs(1) = axes('Parent',fig(end));
-
 range = 250;    % Range in centimeters
 angle = pi/10;  % Angle in radians
 im = getTargetImage(range,angle);
 
-img(1) = imshow(im,'Parent',axs(end));
+fig(1) = figure('Name','getTargetImage.m');
+axs(1) = axes('Parent',fig(end));
+obj(1) = imshow(im,'Parent',axs(end));
 set(axs(end),'Visible','on');
 xlabel(axs(end),'x (pixels)');
 ylabel(axs(end),'y (pixels)');
 
 %% b.02
-fig(end+1) = figure('Name','getShotPatternImage.m');
-axs(end+1) = axes('Parent',fig(end));
-
 range = 250;    % Range in centimeters
 nShots = 10;    % Number of shots to take
 im = getShotPatternImage(range,nShots);
 
-img(end+1) = imshow(im,'Parent',axs(end));
+fig(end+1) = figure('Name','getShotPatternImage.m');
+axs(end+1) = axes('Parent',fig(end));
+obj(end+1) = imshow(im,'Parent',axs(end));
 set(axs(end),'Visible','on');
 xlabel(axs(end),'x (pixels)');
 ylabel(axs(end),'y (pixels)');
 
 %% b.03
-fig(end+1) = figure('Name','getCalibrationImage.m');
-axs(end+1) = axes('Parent',fig(end));
-
 range = 250;    % Range in centimeters
 im = getCalibrationImage(range,nShots);
 
-img(end+1) = imshow(im,'Parent',axs(end));
+fig(end+1) = figure('Name','getCalibrationImage.m');
+axs(end+1) = axes('Parent',fig(end));
+obj(end+1) = imshow(im,'Parent',axs(end));
 set(axs(end),'Visible','on');
 xlabel(axs(end),'x (pixels)');
 ylabel(axs(end),'y (pixels)');
 
 %% c.01
-uniform_t     = linspace(0,60,500).';       % Uniform time  (made-up, not real, for test only)
-uniform_PWM   = sin(2*pi * t./10);          % Uniform PWM   (made-up, not real, for test only)
-uniform_theta = 2*pi*cos(2*pi * t./10);     % Uniform angle (made-up, not real, for test only)
+uniform_t     = linspace(0,60,500).';           % Uniform time  (made-up, not real, for test only)
+uniform_PWM   = sin(2*pi * uniform_t./10);      % Uniform PWM   (made-up, not real, for test only)
+uniform_theta = 2*pi*cos(2*pi * uniform_t./10); % Uniform angle (made-up, not real, for test only)
 dat = [uniform_PWM, uniform_t, uniform_theta];
 
 b = 5;          % Transfer function numerator   (made-up, not real, for test only)
@@ -77,9 +74,15 @@ x = [b,a,delta];
 metric = objFunc(x,dat)
 
 %% c.02
-cParams.Kp = 2.0;
-cParams.Ki = 0.5;
-control_Params.Kd = 1.0;
-timeIN = 0:0.01:20;
+cParams.Kp     = 2.0;
+cParams.Ki     = 0.5;
+cParams.Kd     = 1.0;
+cParams.despos = pi/8;
+timeIN = 0:0.1:10;
 
 [SSE,time,theta,omega,duty_cycle,eint] = sendCmdtoDcMotor('closed',cParams,timeIN);
+fig(end+1) = figure('Name','sendCmdtoDcMotor.m');
+axs(end+1) = axes('Parent',fig(end));
+obj(end+1) = plot(axs(end),time,theta,'b');
+xlabel(axs(end),'Time (s)');
+ylabel(axs(end),'Angle (radians)');
