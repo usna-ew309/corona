@@ -11,7 +11,11 @@ ToolboxVer     = str2func( sprintf('%sVer',toolboxName) );
 installToolbox = str2func( installFunc );
 
 %% Check current version
-A = ToolboxVer;
+try
+    A = ToolboxVer;
+catch
+    % No toolbox version function is available
+end
 
 %% Setup temporary file directory
 fprintf('Downloading %s...',toolboxName);
