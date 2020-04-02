@@ -133,7 +133,12 @@ for tCon = 1:numel(toolboxContent)
     
     % Migrate files
     files = filenames{tCon};
-    wb = waitbar(0,sprintf('Copying EW309corona %s contents...',upper(toolboxContent{tCon})));
+    % Waitbar ------
+    wbSTR = upper(toolboxContent{tCon});
+    wbSTR_idx = strfind(wbSTR,'_');
+    wbSTR(wbSTR_idx) = ' ';
+    wb = waitbar(0,sprintf('Copying EW309corona %s contents...',wbSTR));
+    % --------------
     n = numel(files);
     fprintf('Copying EW309corona %s contents:\n',upper(toolboxContent{tCon}));
     for i = 1:n
