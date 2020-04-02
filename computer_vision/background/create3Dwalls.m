@@ -1,13 +1,10 @@
-%% SCRIPT_DewarpBackground
-% This script allows the user to manually define the affine transformation
-% relating the "true" wall dimensions for Ri078 and Ri080 to the pixel
-% coordinates associated with images captured by D. Evangelista. Then
-% creates a figure for each room where each image is warped and placed in
-% 3D space.
+function create3Dwalls(varargin)
+%CREATE3DWALLS generates "3D Walls, Ri078.fig" and "3D Walls, Ri080.fig"
+%   CREATE3DWALLS saves the designated figures as files
 %
-% This script produces:
-%   3D Walls, Ri078.fig and
-%   3D Walls, Ri080.fig
+%   CREATE3DWALLS(saveFiles) allows the user to specify whether or not to
+%   save the *.fig files.
+%       saveFiles = {[true],false} where true results in saved files.
 %
 % Each figure contains the following hierarchy (discounting "triad.m" 
 % lines) where tabs illustrate parent/child relationships:
@@ -31,13 +28,19 @@
 %                       HgTransform - Tag: NW Wall Dewarp Frame
 %                           Image --- Tag: NW Wall Image
 %
-%   EW309 - Guided Design Experience
-%
-%   M. Kutzer, 18Mar2020, USNA
+%   M. Kutzer, 02Apr2020, USNA
 
-clear all
-close all
-clc
+%% Check input(s)
+narginchk(0,1);
+
+if nargin == 1
+    saveFiles = varargin{1};
+else
+    saveFiles = true;
+end
+
+%% Provide status
+fprintf('Generating 3D wall figures...\n');
 
 %% Define file info
 pname = 'data';
@@ -62,85 +65,37 @@ wallDimensions{2,4} = [L,H]; % Ri080, NW Wall
 
 %% Select initialize plot
 % Note that this section should not run if/when DigitizedWalls.mat is
-% already available. This step is a bit timeconsuming. 
+% already available. This step is a bit timeconsuming.
 filename = 'DigitizedWalls.mat';
-if ~isfile(filename)
-    fig = figure;
-    axs = axes('Parent',fig);
-    
-    fname = sprintf('%s_%s_Wall.jpg',roomIDs{1},directionIDs{1});
-    fname = fullfile(pname,fname);
-    im = imread(fname);
-    
-    img = imshow(im,'Parent',axs);
-    hold(axs,'on');
-    set(axs,'Visible','on');
-    set(fig,'Units','Normalized','Position',[0,0,1,1]);
-    
-    offset = 300;
-    res = size(im);
-    x = [offset,res(2)-offset];
-    y = [offset,res(1)-offset];
-    xx = [x(1),x(2),x(2),x(1)];
-    yy = [y(1),y(1),y(2),y(2)];
-    
-    verts = [xx; yy].';
-    
-    % Allow polygon to be dragged
-    [ptc,plt] = dragPolygon(axs,verts);
-    
-    for i = 1:numel(roomIDs)
-        for j = 1:numel(directionIDs)
-            % Read image
-            fname = sprintf('%s_%s_Wall.JPG',roomIDs{i},directionIDs{j});
-            im = imread(fullfile(pname,fname));
-            
-            % Update image
-            set(img,'CData',im);
-            drawnow;
-            
-            title('Press "q" to save points.');
-            waitForKey(fig,'q');
-            
-            X_m{i,j} = get(ptc,'Vertices').';
-            set(ptc,'Vertices',verts);
-            for k = 1:numel(xx)
-                set(plt(k),'XData',xx(k),'YData',yy(k));
-            end
-        end
-    end
-    delete(fig);
-    
-    save(filename,'X_m','roomIDs','directionIDs','wallDimensions');
-else
-    fprintf('Loading previous dewarping points...\n');
-    load(filename);
-    fprintf('[COMPLETE]\n');
-end
+fprintf('\tLoading dewarping points...');
+load(filename);
+fprintf('[COMPLETE]\n');
 
 %% Define the wall-referenced coordinates
-
 for i = 1:numel(roomIDs)
-    fig(i) = figure('Name',sprintf('3D Walls, %s',roomIDs{i}),'Tag',sprintf('Figure, %s',roomIDs{i}));
-    axs(i) = axes('Parent',fig(i),'Tag',sprintf('Axes, %s',roomIDs{i}));
-    hold(axs(i),'on');
-    daspect(axs(i),[1 1 1]);
-    view(axs(i),3);
+    str = sprintf('3D Walls, %s',roomIDs{i});
+    fprintf('\tCreating "%s"...',str);
+    fig = figure('Name',str,'Tag',sprintf('Figure, %s',roomIDs{i}));
+    set(fig,'Visible','off');
+    axs = axes('Parent',fig,'Tag',sprintf('Axes, %s',roomIDs{i}));
+    hold(axs,'on');
+    daspect(axs,[1 1 1]);
+    view(axs,3);
     
     % Define "west corner frame" in the lower west corner of the room
-    hg_w(i) = triad('Parent',axs(i),'Scale',500,'Tag','West Corner Frame');
+    hg_w = triad('Parent',axs,'Scale',500,'Tag','West Corner Frame');
     
     W = wallDimensions{i,1}(1);
     L = wallDimensions{i,2}(1);
-    X_w{i}(:,1) = [W; 0]; % SW
-    X_w{i}(:,2) = [W; L]; % SE
-    X_w{i}(:,3) = [0; L]; % NE
-    X_w{i}(:,4) = [0; 0]; % NW
+    X_w(:,1) = [W; 0]; % SW
+    X_w(:,2) = [W; L]; % SE
+    X_w(:,3) = [0; L]; % NE
+    X_w(:,4) = [0; 0]; % NW
     
-    H_b2w{i,1} =  Tx( X_w{i}(1,1) ) *  Ty( X_w{i}(2,1) ) * Rx(pi/2) * Ry( (2/2) * pi );
-    H_b2w{i,2} =  Tx( X_w{i}(1,2) ) *  Ty( X_w{i}(2,2) ) * Rx(pi/2) * Ry( (3/2) * pi );
-    H_b2w{i,3} =  Tx( X_w{i}(1,3) ) *  Ty( X_w{i}(2,3) ) * Rx(pi/2) * Ry( (0/2) * pi );
-    H_b2w{i,4} =  Tx( X_w{i}(1,4) ) *  Ty( X_w{i}(2,4) ) * Rx(pi/2) * Ry( (1/2) * pi );
+    H_b2w{1} =  Tx( X_w(1,1) ) *  Ty( X_w(2,1) ) * Rx(pi/2) * Ry( (2/2) * pi );
+    H_b2w{2} =  Tx( X_w(1,2) ) *  Ty( X_w(2,2) ) * Rx(pi/2) * Ry( (3/2) * pi );
+    H_b2w{3} =  Tx( X_w(1,3) ) *  Ty( X_w(2,3) ) * Rx(pi/2) * Ry( (0/2) * pi );
+    H_b2w{4} =  Tx( X_w(1,4) ) *  Ty( X_w(2,4) ) * Rx(pi/2) * Ry( (1/2) * pi );
     
     % Add lights
     w = W/3;
@@ -155,7 +110,7 @@ for i = 1:numel(roomIDs)
         (3/2)*w, (5/2)*l, H;... % Light 7
         (5/2)*w, (5/2)*l, H];   % Light 8
     for k = 1:size(lightPos,1)
-        lgt(i,k) = light('Parent',hg_w(i),'Style','Local',...
+        lgt(i,k) = light('Parent',hg_w,'Style','Local',...
             'Position',lightPos(k,:),'Tag',sprintf('Light %d',k));
     end
     
@@ -167,18 +122,18 @@ for i = 1:numel(roomIDs)
         yy = [y(2),y(2),y(1),y(1)];
         
         % Combine the vertical wall corner points
-        X_b{i,j} = [xx; yy];
-        X_b{i,j}(3,:) = 1;
-        X_m{i,j}(3,:) = 1;
+        X_b{j} = [xx; yy];
+        X_b{j}(3,:) = 1;
+        X_m{j}(3,:) = 1;
         
         % Calculate affine transform to warp from pixels to wall
         % coordinates
-        A_m2b{i,j} = X_b{i,j} * pinv(X_m{i,j});
+        A_m2b{j} = X_b{j} * pinv(X_m{j});
         tmp = eye(4);
-        tmp(1:2,1:2) = A_m2b{i,j}(1:2,1:2);
-        tmp(1:2,4)   = A_m2b{i,j}(1:2,3);
+        tmp(1:2,1:2) = A_m2b{j}(1:2,1:2);
+        tmp(1:2,4)   = A_m2b{j}(1:2,3);
         tmp(3,3) = -1;  % Correction...
-        A_m2b_3D{i,j} = tmp;
+        A_m2b_3D{j} = tmp;
         
         % Load image
         fname = sprintf('%s_%s_Wall.jpg',roomIDs{i},directionIDs{j});
@@ -186,22 +141,46 @@ for i = 1:numel(roomIDs)
         im = imread(fname);
         
         % Define wall base frame
-        hg_b(i,j) = triad('Parent',hg_w(i),'Scale',300,'Matrix',H_b2w{i,j},'Tag',sprintf('%s Wall Base Frame',directionIDs{j}));
+        hg_b(j) = triad('Parent',hg_w,'Scale',300,'Matrix',H_b2w{j},'Tag',sprintf('%s Wall Base Frame',directionIDs{j}));
         
         % Define wall dwarp frame
-        hg_m(i,j) = triad('Parent',hg_b(i,j),'Matrix',A_m2b_3D{i,j},'Tag',sprintf('%s Wall Dewarp Frame',directionIDs{j}));
+        hg_m(j) = triad('Parent',hg_b(j),'Matrix',A_m2b_3D{j},'Tag',sprintf('%s Wall Dewarp Frame',directionIDs{j}));
         
         % Plot image
-        img = imshow(im,'Parent',axs(i));
-        set(img,'Parent',hg_m(i,j),'Tag',sprintf('%s Wall Image',directionIDs{j}));
+        img = imshow(im,'Parent',axs);
+        set(img,'Parent',hg_m(j),'Tag',sprintf('%s Wall Image',directionIDs{j}));
     end
     
     % Create base frame in the center of the room
-    hg_o(i) = triad('Parent',axs(i),'Scale',300,'LineWidth',2,'Tag','Room Center Frame');
-    H_w2o{i} = Tx(-W/2) * Ty(-L/2) * Tz(-1400); % Align with camera height
-    set(hg_w(i),'Parent',hg_o(i),'Matrix',H_w2o{i});
+    hg_o = triad('Parent',axs,'Scale',300,'LineWidth',2,'Tag','Room Center Frame');
+    H_w2o = Tx(-W/2) * Ty(-L/2) * Tz(-1400); % Align with camera height
+    set(hg_w,'Parent',hg_o,'Matrix',H_w2o);
+    
+    % Update axes directions
+    set(axs,'XDir','Normal','YDir','Normal','ZDir','Normal');
+    
+    fprintf('[COMPLETE]\n');
     
     % Save figure
-    set(axs(i),'XDir','Normal','YDir','Normal','ZDir','Normal');
-    saveas(fig(i),sprintf('3D Walls, %s.fig',roomIDs{i}),'fig')
+    if saveFiles
+        fname = sprintf('3D Walls, %s.fig',roomIDs{i});
+        fprintf('\tSaving "%s"...',fname);
+        drawnow;
+        try
+            saveas(fig,fname,'fig');
+            fprintf('[COMPLETE]\n');
+        catch
+            % TODO - add failed message
+            fprintf('[FAILED]\n');
+        end
+        
+        % Delete figure
+        delete(fig);
+    else
+        set(fig,'Visible','on');
+    end
+    drawnow
 end
+
+%% Display complete notification
+fprintf('3D wall figure generation complete.\n');

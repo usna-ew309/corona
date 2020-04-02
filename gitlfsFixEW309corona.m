@@ -8,16 +8,18 @@ function gitlfsFixEW309corona
 toolboxName = 'EW309corona';
 
 %% Define local path and file information
-fileInfo{ 1} = {'ballistics','MVfit.mat'};
-fileInfo{ 2} = {'computer_vision','ColorStats.mat'};
-fileInfo{ 3} = {'computer_vision','background','data','Ri078_NE_Wall.JPG'};
-fileInfo{ 4} = {'computer_vision','background','data','Ri078_NW_Wall.JPG'};
-fileInfo{ 5} = {'computer_vision','background','data','Ri078_SE_Wall.JPG'};
-fileInfo{ 6} = {'computer_vision','background','data','Ri078_SW_Wall.JPG'};
-fileInfo{ 7} = {'computer_vision','background','data','Ri080_NE_Wall.JPG'};
-fileInfo{ 8} = {'computer_vision','background','data','Ri080_NW_Wall.JPG'};
-fileInfo{ 9} = {'computer_vision','background','data','Ri080_SE_Wall.JPG'};
-fileInfo{10} = {'computer_vision','background','data','Ri080_SW_Wall.JPG'};
+fileInfo{    1} = {'ballistics','MVfit.mat'};
+fileInfo{end+1} = {'computer_vision','ColorStats.mat'};
+fileInfo{end+1} = {'computer_vision','background','DigitizedWalls.mat'};
+fileInfo{end+1} = {'computer_vision','background','data','Ri078_NE_Wall.JPG'};
+fileInfo{end+1} = {'computer_vision','background','data','Ri078_NW_Wall.JPG'};
+fileInfo{end+1} = {'computer_vision','background','data','Ri078_SE_Wall.JPG'};
+fileInfo{end+1} = {'computer_vision','background','data','Ri078_SW_Wall.JPG'};
+fileInfo{end+1} = {'computer_vision','background','data','Ri080_NE_Wall.JPG'};
+fileInfo{end+1} = {'computer_vision','background','data','Ri080_NW_Wall.JPG'};
+fileInfo{end+1} = {'computer_vision','background','data','Ri080_SE_Wall.JPG'};
+fileInfo{end+1} = {'computer_vision','background','data','Ri080_SW_Wall.JPG'};
+fileInfo{end+1} = {'computer_vision','calibration','data','cameraParams_20200312-evangelista-1.mat'};
 
 %% Check files
 fprintf('Checking files for git-lfs location/ID info...\n');
@@ -94,6 +96,21 @@ end
 if ~ok
     warning('Unable to remove temporary download folder. %s',msg);
 end
+
+%% Generate necessary data
+basePath = cd;
+
+% Create 3D walls
+newPath = fullfile(basePath,'computer_vision','background');
+cd(newPath);
+create3Dwalls;
+cd(basePath);
+
+% Create 3D fov
+newPath = fullfile(basePath,'computer_vision');
+cd(newPath);
+create3Dfov
+cd(basePath);
 
 %% Complete installation
 fprintf('git-lfs fix complete.\n');

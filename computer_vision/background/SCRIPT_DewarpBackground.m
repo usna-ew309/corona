@@ -9,9 +9,9 @@
 %   3D Walls, Ri078.fig and
 %   3D Walls, Ri080.fig
 %
-% Each figure contains the following hierarchy (discounting "triad.m" 
+% Each figure contains the following hierarchy (discounting "triad.m"
 % lines) where tabs illustrate parent/child relationships:
-%   Figure -------------------------- Tag: Figure, Ri0**             
+%   Figure -------------------------- Tag: Figure, Ri0**
 %       Axes ------------------------ Tag: Axes, Ri0**
 %           HgTransform ------------- Tag: Room Center Frame
 %               HgTransform --------- Tag: West Corner Frame
@@ -39,6 +39,9 @@ clear all
 close all
 clc
 
+%% Define whether or not we should save figures
+saveFigures = false;
+
 %% Define file info
 pname = 'data';
 roomIDs = {'Ri078','Ri080'};
@@ -60,9 +63,9 @@ wallDimensions{2,2} = [L,H]; % Ri080, SE Wall
 wallDimensions{2,3} = [W,H]; % Ri080, NE Wall
 wallDimensions{2,4} = [L,H]; % Ri080, NW Wall
 
-%% Select initialize plot
+%% Dewarp Walls
 % Note that this section should not run if/when DigitizedWalls.mat is
-% already available. This step is a bit timeconsuming. 
+% already available. This step is a bit timeconsuming.
 filename = 'DigitizedWalls.mat';
 if ~isfile(filename)
     fig = figure;
@@ -112,14 +115,11 @@ if ~isfile(filename)
     delete(fig);
     
     save(filename,'X_m','roomIDs','directionIDs','wallDimensions');
-else
-    fprintf('Loading previous dewarping points...\n');
-    load(filename);
-    fprintf('[COMPLETE]\n');
 end
 
 %% Define the wall-referenced coordinates
-
+create3Dwalls(saveFigures);
+%{
 for i = 1:numel(roomIDs)
     fig(i) = figure('Name',sprintf('3D Walls, %s',roomIDs{i}),'Tag',sprintf('Figure, %s',roomIDs{i}));
     axs(i) = axes('Parent',fig(i),'Tag',sprintf('Axes, %s',roomIDs{i}));
@@ -205,3 +205,4 @@ for i = 1:numel(roomIDs)
     set(axs(i),'XDir','Normal','YDir','Normal','ZDir','Normal');
     saveas(fig(i),sprintf('3D Walls, %s.fig',roomIDs{i}),'fig')
 end
+%}
