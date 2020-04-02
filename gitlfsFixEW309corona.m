@@ -91,6 +91,7 @@ for i = 1:numel(fileInfo)
     end
 end
 
+bin
 %% Remove temporary folder
 [ok,msg] = rmdir(pname,'s');
 if ~ok

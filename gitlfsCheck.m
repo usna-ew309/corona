@@ -10,7 +10,7 @@ function tf = gitlfsCheck(varargin)
 %
 %   M. Kutzer, 02Apr2020, USNA
 
-debugON = true;
+debugON = false;
 
 %% Check input(s)
 filename = fullfile(varargin{:});
@@ -23,12 +23,13 @@ tline = fgets(fid);
 out = strfind( lower(tline),gitlfsPhrase );
 
 if debugON
-    fprintf(2,'-------- gitlfsCheck.m VERSION 5.0 -------------\n');
+    %fprintf(2,'-------- gitlfsCheck.m VERSION X.X -------------\n');
     % DEBUG
     tline(end) = [];
     dispStr = tline;
-    if numel(dispStr) > 30
-        dispStr = dispStr(1:30);
+    lgth = 50;
+    if numel(dispStr) > lgth
+        dispStr = dispStr(1:lgth);
     end
     fprintf('\n\tDEBUG gitlfsCheck.m: "%s" IN "%s"\n',gitlfsPhrase,dispStr);
 end
