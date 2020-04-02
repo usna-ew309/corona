@@ -13,3 +13,9 @@ narginchk(1,1);
 %% Get image
 frm = getframe(h.Figure);
 im = frm.cdata;
+
+if size(im,1) ~= 480
+    % Wrong image size!
+    %   - Brute force correct!
+    im = imresize(im,[480,640]);
+end
