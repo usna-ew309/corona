@@ -34,13 +34,6 @@ if ~confirm
     error('InstallToolbox:FailedDownload','Failed to download updated version of %s Toolbox.',toolboxName);
 end
 
-% TODO - Download individual images
-% https://www.usna.edu/Users/weaprcon/kutzer/_files/coursefiles/EW309supportFiles.zip
-%   EW309supportFiles.zip
-%       Ri078_NE_Wall.JPG
-%       ...
-%       Ri080_SW_Wall.JPG
-%   (1) Run 
 %% Find base directory
 install_pos = strfind(fnames, installFunc );
 sIdx = cell2mat( install_pos );
@@ -51,6 +44,9 @@ pname_star = fnames{cIdx}(1:sIdx-1);
 %% Get current directory and temporarily change path
 cpath = cd;
 cd(pname_star);
+
+%% Run git-lfs fix
+gitlfsFixEW309corona;
 
 %% Install ScorBot Toolbox
 installToolbox(true);
