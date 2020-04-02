@@ -42,7 +42,6 @@ else
 end
 
 %% Move the turret
-angle
 hNEW = moveTurretFOV(h,angle);
 drawnow;
 
