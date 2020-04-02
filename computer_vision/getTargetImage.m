@@ -58,10 +58,22 @@ if nargin < 4
     end
     
     if useGlobal
+        % Check for pre-existing target(s)
+        if isfield(hFOV_global,'getTargetImage')
+            % Return turret to zero configuration
+            set(hFOV_global.Frames.h_r2b,'Matrix',hFOV_global.getTargetImage.H_r2b_0)
+            hFOV_global.Frames.H_r2b = hFOV_global.getTargetImage.H_r2b_0;
+            % Remove pre-existing target(s)
+            delete(hFOV_global.getTargetImage.h_a2r);
+            % Remove "getTargetImage" field
+            hFOV_global = rmfield(hFOV_global,'getTargetImage');
+        end
+        % Update turret struct
         h = hFOV_global;
     else
         h = createEW309RoomFOV('Ri080');
         hFOV_global = h;
+        useGlobal = true;
     end
     set(h.Figure,'Visible','off');
     
@@ -131,17 +143,28 @@ drawnow;
 im = getFOVSnapshot(hNEW);
 
 %% Return FOV to original state
-hNEW.Frames.h_r2b = h.H_r2b;
-hNEW.H_r2b = h.H_r2b;
-
-% Debugging calculations
-%{
+if useGlobal
+    % Update global
+    hFOV_global = hNEW;
+    % Append zero configuration
+    hFOV_global.getTargetImage.H_r2b_0 = h.H_r2b;
+    % Append parent of target(s)
+    hFOV_global.getTargetImage.h_a2r = h_a2r;
+    % Append angle information
+    hFOV_global.getTargetImage.angle = angle;
+else
+    set(hNEW.Frames.h_r2b,'Matrix',h.H_r2b);
+    hNEW.H_r2b = h.H_r2b;
+    
+    % Debugging calculations
+    %{
 H_a2r = h_a2r.Matrix;
 H_r2b = h.Frames.h_r2b.Matrix;
 H_b2c = h.Frames.h_b2c.Matrix;
 
 H_r2c = H_a2r^(-1);
 H_a2c = H_b2c*H_r2b*H_a2r
-%}
-
-delete(h_a2r);
+    %}
+    
+    delete(h_a2r);
+end
