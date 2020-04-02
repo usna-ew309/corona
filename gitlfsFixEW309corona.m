@@ -67,6 +67,7 @@ srcPathBase = pname;                    % base of source path
 dstPathBase = cd;                       % base of destination path
 
 %% Replace git-lfs info files
+gitlfsBIN
 fprintf('Replacing for git-lfs location/ID files...\n');
 for i = 1:numel(fileInfo)
     fprintf('\t%s...',fileInfo{i}{end});
