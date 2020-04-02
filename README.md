@@ -42,6 +42,15 @@ To use these routines, your Matlab will need the following somewhere in its PATH
 ## Control simulation
 ## Integrated simulation
 
+## Packaging
+Cloning the repository, via `git clone` or the GUI tool, will provide all the files needed, however, if you download the zip from Github it will replace the digital resource files with links (this method is not recommended). For ease of download from Google Drive, we can create zips of major releases and upload them there. To tag a major release and then zip it for this type of use:
+```bash
+git tag -a v20.4.1rc0 -m "Creating release candidate 0"
+git push origin tags
+git fetch --all --tags
+zip -r coronoa-v20.4.1rc0.zip corona -x '*.git*'
+```
+
 ### Contributors
 L Devries, D Evangelista, M Kutzer, CAPT T Severson
 
