@@ -25,8 +25,8 @@ fileInfo{end+1} = {'computer_vision','calibration','data','cameraParams_20200312
 fprintf('Checking files for git-lfs location/ID info...\n');
 for i = 1:numel(fileInfo)
     fprintf('\t%s...',fileInfo{i}{end});
-    bin(i) = gitlfsCheck(fileInfo{i}{:});
-    if bin(i)
+    gitlfsBIN(i) = gitlfsCheck(fileInfo{i}{:});
+    if gitlfsBIN(i)
         fprintf('[git-lfs File]\n');
     else
         fprintf('[Data File]\n');
@@ -34,7 +34,7 @@ for i = 1:numel(fileInfo)
 end
 
 % Skip the remainder of this function if all files contain data
-if ~any(bin)
+if ~any(gitlfsBIN)
     fprintf('No git-lfs fixes required\n');
     return
 end
@@ -70,7 +70,7 @@ dstPathBase = cd;                       % base of destination path
 fprintf('Replacing for git-lfs location/ID files...\n');
 for i = 1:numel(fileInfo)
     fprintf('\t%s...',fileInfo{i}{end});
-    if ~bin(i)
+    if ~gitlfsBIN(i)
         fprintf('[SKIPPED]\n');
         continue
     end
@@ -91,7 +91,6 @@ for i = 1:numel(fileInfo)
     end
 end
 
-bin
 %% Remove temporary folder
 [ok,msg] = rmdir(pname,'s');
 if ~ok
