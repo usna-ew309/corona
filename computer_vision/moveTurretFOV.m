@@ -20,21 +20,30 @@ narginchk(2,3);
 
 % Get current pose
 H_r2b_0 = get(h.Frames.h_r2b,'Matrix');
+% Parse parameters
+x0 = -H_r2b_0(1,4);
+y0 = -H_r2b_0(2,4);
+z0 = -H_r2b_0(3,4);
+% -> Assumes z-rotation only
+theta0 = -atan2(H_r2b_0(2,1),H_r2b_0(1,1));
 
+% Update theta-only
 if nargin == 2
-    theta = varargin{1};
-    x = -H_r2b_0(1,4);
-    y = -H_r2b_0(2,4);
+    theta = theta0 + varargin{1};
+    x = x0;
+    y = y0;
+    z = z0;
 end
 
 if nargin == 3
-    theta = -atan2(H_r2b_0(2,1),H_r2b_0(1,1));
+    theta = theta0;
     x = varargin{1};
     y = varargin{2};
+    z = z0;
 end
 
 %% Update turret FOV
-H_r2b = Tx(-x)*Ty(-y)*Rz(-theta);
+H_r2b = Tx(-x)*Ty(-y)*Tz(-z)*Rz(-theta);
 
 h.H_r2b = H_r2b;
 set(h.Frames.h_r2b,'Matrix',H_r2b);

@@ -32,8 +32,9 @@ if ~useGlobal
 end
 
 if isfield(hFOV_global,'getTargetImage')
-    % Get absolute angle
-    angle = hFOV_global.getTargetImage.angle + relative_angle;
+    % Get angle
+    %angle = hFOV_global.getTargetImage.angle + relative_angle;
+    angle = relative_angle;
     % Update turret struct
     h = hFOV_global;
 else
@@ -41,6 +42,7 @@ else
 end
 
 %% Move the turret
+angle
 hNEW = moveTurretFOV(h,angle);
 drawnow;
 
