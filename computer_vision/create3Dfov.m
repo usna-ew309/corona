@@ -81,8 +81,10 @@ for i = 1:numel(roomIDs)
     fname = sprintf('3D Walls, %s',roomIDs{i});
     fprintf('\tLoading "%s.fig"...',fname);
     try
+        warning off
         open( fullfile('background',[fname,'.fig']) );
         drawnow;
+        warning on
         fprintf('[COMPLETE]\n');
     catch
         fprintf('[FAILED]\n');

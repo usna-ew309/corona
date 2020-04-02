@@ -114,6 +114,7 @@ for i = 1:numel(roomIDs)
             'Position',lightPos(k,:),'Tag',sprintf('Light %d',k));
     end
     
+    warning off
     for j = 1:numel(directionIDs)
         % Define the vertical points on the wall
         x = [0, wallDimensions{i,j}(1)];
@@ -155,6 +156,8 @@ for i = 1:numel(roomIDs)
     hg_o = triad('Parent',axs,'Scale',300,'LineWidth',2,'Tag','Room Center Frame');
     H_w2o = Tx(-W/2) * Ty(-L/2) * Tz(-1400); % Align with camera height
     set(hg_w,'Parent',hg_o,'Matrix',H_w2o);
+    
+    warning on
     
     % Update axes directions
     set(axs,'XDir','Normal','YDir','Normal','ZDir','Normal');

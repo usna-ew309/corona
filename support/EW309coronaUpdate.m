@@ -55,7 +55,9 @@ installToolbox(true);
 cd(cpath);
 [ok,msg] = rmdir(pname,'s');
 if ~ok
-    warning('Unable to remove temporary download folder. %s',msg);
+    % TODO - address the issue with removing the tmp directory.
+    %warning('Unable to remove temporary download folder. %s',msg);
+    warning('Unable to remove temporary download folder. %s',pname);
 end
 
 %% Complete installation
