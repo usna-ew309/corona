@@ -48,6 +48,8 @@ drawnow;
 im = getFOVSnapshot(hNEW);
 
 %% Update global angle
+% Recover parent of target(s)
+h_a2r = hFOV_global.getTargetImage.h_a2r;
 % Update global
 hFOV_global = hNEW;
 % Append zero configuration

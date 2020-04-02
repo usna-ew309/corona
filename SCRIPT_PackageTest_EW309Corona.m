@@ -40,7 +40,7 @@ ylabel(axs(end),'y (pixels)');
 drawnow;
 
 %% b.02
-delta_angle = -angle;
+relative_angle = -angle;
 im = getTargetImageUpdate(relative_angle);
 
 fig(end+1) = figure('Name','getTargetImageUpdate.m');
