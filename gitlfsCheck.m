@@ -23,9 +23,10 @@ tline = fgets(fid);
 out = strfind( lower(tline),gitlfsPhrase );
 
 if debugON
+    fprintf(2,'-------- gitlfsCheck.m VERSION 5.0 -------------\n');
     % DEBUG
     tline(end) = [];
-    fprintf('\n\tDEBUG gitlfsCheck.m: "%s" IN "%s"\n',gitlfsPhrase,tline);
+    fprintf('\n\tDEBUG gitlfsCheck.m: "%s" IN "%s"\n',gitlfsPhrase(1:30),tline);
 end
 
 if isempty(out)
