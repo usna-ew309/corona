@@ -23,7 +23,7 @@ fileInfo{10} = {'computer_vision','background','data','Ri080_SW_Wall.JPG'};
 %% Check files
 fprintf('Checking files for git-lfs location/ID info...\n');
 for i = 1:numel(fileInfo)
-    fprintf('\n%s...',fileInfo{i}{end});
+    fprintf('%s...',fileInfo{i}{end});
     bin(i) = gitlfsCheck(fileInfo{i}{:});
     if bin(i)
         fprintf('[git-lfs File]\n');
@@ -64,6 +64,11 @@ install_pos = strfind(fnames, installFunc );
 sIdx = cell2mat( install_pos );
 cIdx = ~cell2mat( cellfun(@isempty,install_pos,'UniformOutput',0) );
 
+install_pos
+sIdx
+cIdx
+fnames
+fnames{cIdx}
 srcPathBase = fnames{cIdx}(1:sIdx-1);   % base of source path
 
 %% Get current directory
@@ -72,7 +77,7 @@ dstPathBase = cd;                       % base of destination path
 %% Replace git-lfs info files
 fprintf('Replacing for git-lfs location/ID files...\n');
 for i = 1:numel(fileInfo)
-    fprintf('\n%s...',fileInfo{i}{end});
+    fprintf('%s...',fileInfo{i}{end});
     if ~bin(i)
         fprintf('[SKIPPED]\n');
         continue
