@@ -10,6 +10,8 @@ function tf = gitlfsCheck(varargin)
 %
 %   M. Kutzer, 02Apr2020, USNA
 
+debugON = true;
+
 %% Check input(s)
 filename = fullfile(varargin{:});
 
@@ -20,20 +22,24 @@ gitlfsPhrase = 'git-lfs';
 tline = fgets(fid);
 out = strfind( lower(tline),gitlfsPhrase );
 
-% DEBUG
-tline(end) = [];
-fprintf('\n\tDEBUG gitlfsCheck.m: "%s" IN "%s"\n',gitlfsPhrase,tline);
+if debugON
+    % DEBUG
+    tline(end) = [];
+    fprintf('\n\tDEBUG gitlfsCheck.m: "%s" IN "%s"\n',gitlfsPhrase,tline);
+end
 
 if isempty(out)
-    % File contains git-lfs location/ID information 
+    % File contains git-lfs location/ID information
     tf = true;
-    
-    % DEBUG
-    fprintf('\t\tYES!!!\n')
+    if debugON
+        % DEBUG
+        fprintf('\t\tYES!!!\n')
+    end
 else
     % File contains actual data
     tf = false;
-    
-    % DEBUG
-    fprintf('\t\tNO\n')
+    if debugON
+        % DEBUG
+        fprintf('\t\tNO\n')
+    end
 end
