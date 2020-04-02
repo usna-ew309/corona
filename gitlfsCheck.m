@@ -29,17 +29,17 @@ if debugON
 end
 
 if isempty(out)
+    % File contains actual data
+    tf = false;
+    if debugON
+        % DEBUG
+        fprintf('\t\NO\n')
+    end
+else
     % File contains git-lfs location/ID information
     tf = true;
     if debugON
         % DEBUG
         fprintf('\t\tYES!!!\n')
-    end
-else
-    % File contains actual data
-    tf = false;
-    if debugON
-        % DEBUG
-        fprintf('\t\tNO\n')
     end
 end

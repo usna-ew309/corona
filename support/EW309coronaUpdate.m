@@ -14,7 +14,7 @@ installToolbox = str2func( installFunc );
 A = ToolboxVer;
 
 %% Setup temporary file directory
-fprintf('Downloading the %s...',toolboxName);
+fprintf('Downloading %s...',toolboxName);
 tmpFolder = sprintf('%s',toolboxName);
 pname = fullfile(tempdir,tmpFolder);
 
