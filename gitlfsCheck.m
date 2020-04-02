@@ -16,13 +16,24 @@ filename = fullfile(varargin{:});
 %% Read file
 fid = fopen(filename,'r');
 
+gitlfsPhrase = 'git-lfs';
 tline = fgets(fid);
-out = strfind( lower(tline),'git-lfs' );
+out = strfind( lower(tline),gitlfsPhrase );
+
+% DEBUG
+tline(end) = [];
+fprintf('\n\tDEBUG gitlfsCheck.m: "%s" IN "%s"\n',gitlfsPhrase,tline);
 
 if isempty(out)
     % File contains git-lfs location/ID information 
     tf = true;
+    
+    % DEBUG
+    fprintf('\t\tYES!!!\n')
 else
     % File contains actual data
     tf = false;
+    
+    % DEBUG
+    fprintf('\t\tNO\n')
 end
