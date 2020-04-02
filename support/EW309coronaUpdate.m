@@ -20,6 +20,7 @@ pname = fullfile(tempdir,tmpFolder);
 
 %% Download and unzip toolbox (GitHub)
 url = 'https://github.com/usna-ew309/corona/archive/master.zip';
+
 try
     fnames = unzip(url,pname);
     fprintf('SUCCESS\n');
@@ -33,6 +34,13 @@ if ~confirm
     error('InstallToolbox:FailedDownload','Failed to download updated version of %s Toolbox.',toolboxName);
 end
 
+% TODO - Download individual images
+% https://www.usna.edu/Users/weaprcon/kutzer/_files/coursefiles/EW309supportFiles.zip
+%   EW309supportFiles.zip
+%       Ri078_NE_Wall.JPG
+%       ...
+%       Ri080_SW_Wall.JPG
+%   (1) Run 
 %% Find base directory
 install_pos = strfind(fnames, installFunc );
 sIdx = cell2mat( install_pos );
