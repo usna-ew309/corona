@@ -26,7 +26,11 @@ if debugON
     fprintf(2,'-------- gitlfsCheck.m VERSION 5.0 -------------\n');
     % DEBUG
     tline(end) = [];
-    fprintf('\n\tDEBUG gitlfsCheck.m: "%s" IN "%s"\n',gitlfsPhrase(1:30),tline);
+    dispStr = tline;
+    if numel(dispStr) > 30
+        dispStr = dispStr(1:30);
+    end
+    fprintf('\n\tDEBUG gitlfsCheck.m: "%s" IN "%s"\n',gitlfsPhrase,dispStr);
 end
 
 if isempty(out)
