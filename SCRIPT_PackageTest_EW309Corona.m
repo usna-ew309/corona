@@ -22,17 +22,13 @@ clc
 %   01. EW309coronaUpdate.m -------- IGNORE, required admin
 %   02. EW309coronaVer.m ----------- TEST
 
-%% Display status information
-fprintf('RUNNING: "%s"\n',mfilename);
-fprintf('%s - %s\n\n',computer,datestr(now));
-
 %% d.02
 % Test function
 EW309coronaVer;
 
 %% Display status information
 fprintf('RUNNING: "%s"\n',mfilename);
-fprintf('%s - %s\n\n',computer,datestr(now));
+fprintf('%s, MATLAB %s, %s\n',computer,version('-release'),datestr(now));
 
 %% b.01
 % Test function
@@ -59,8 +55,8 @@ frm = getframe(figTMP);
 imTMP = frm.cdata;
 % -> Compare sizes
 fprintf('\tb.01\n');
-fprintf('\t\tFunction Image Size: [%3d,%3d]\n',size(im,1),size(im,1));
-fprintf('\t\t   Frame Image Size: [%3d,%3d]\n',size(imTMP,1),size(imTMP,1));
+fprintf('\t\tFunction Image Size: [%3d,%3d,%3d]\n',size(im));
+fprintf('\t\t   Frame Image Size: [%3d,%3d,%3d]\n',size(imTMP));
 
 %% b.02
 % Test function
@@ -86,8 +82,8 @@ frm = getframe(figTMP);
 imTMP = frm.cdata;
 % -> Compare sizes
 fprintf('\tb.02\n');
-fprintf('\t\tFunction Image Size: [%3d,%3d]\n',size(im,1),size(im,1));
-fprintf('\t\t   Frame Image Size: [%3d,%3d]\n',size(imTMP,1),size(imTMP,1));
+fprintf('\t\tFunction Image Size: [%3d,%3d,%3d]\n',size(im));
+fprintf('\t\t   Frame Image Size: [%3d,%3d,%3d]\n',size(imTMP));
 
 %% b.03
 % Test function
@@ -114,8 +110,8 @@ frm = getframe(figTMP);
 imTMP = frm.cdata;
 % -> Compare sizes
 fprintf('\tb.03\n');
-fprintf('\t\tFunction Image Size: [%3d,%3d]\n',size(im,1),size(im,1));
-fprintf('\t\t   Frame Image Size: [%3d,%3d]\n',size(imTMP,1),size(imTMP,1));
+fprintf('\t\tFunction Image Size: [%3d,%3d,%3d]\n',size(im));
+fprintf('\t\t   Frame Image Size: [%3d,%3d,%3d]\n',size(imTMP));
 
 %% b.04
 % Test function
@@ -141,8 +137,8 @@ frm = getframe(figTMP);
 imTMP = frm.cdata;
 % -> Compare sizes
 fprintf('\tb.04\n');
-fprintf('\t\tFunction Image Size: [%3d,%3d]\n',size(im,1),size(im,1));
-fprintf('\t\t   Frame Image Size: [%3d,%3d]\n',size(imTMP,1),size(imTMP,1));
+fprintf('\t\tFunction Image Size: [%3d,%3d,%3d]\n',size(im));
+fprintf('\t\t   Frame Image Size: [%3d,%3d,%3d]\n',size(imTMP));
 
 %% c.01
 % Define dat
@@ -161,10 +157,10 @@ metric = objFunc(x,dat);
 
 % Compare variable sizes
 fprintf('\tc.01\n');
-fprintf('\t\t      Variable "x" Size: [%3d,%3d]\n',size(x));
-fprintf('\t\t    Variable "dat" Size: [%3d,%3d]\n',size(dat));
-fprintf('\t\t Variable "metric" Size: [%3d,%3d]\n',size(metric));
-fprintf('\t\tVariable "metric" Value: %.4f\n',metric);
+fprintf('\t\t     "x" Variable Size: [%3d,%3d]\n',size(x));
+fprintf('\t\t   "dat" Variable Size: [%3d,%3d]\n',size(dat));
+fprintf('\t\t"metric" Variable Size: [%3d,%3d]\n',size(metric));
+fprintf('\t\t"metric" Variable Value: %.4f\n',metric);
 
 %% c.02
 % Define cParams
@@ -176,12 +172,22 @@ cParams.despos = pi/8;
 timeIN = 0:0.1:10;
 
 % Test function
-[SSE,time,theta,omega,duty_cycle,eint] = sendCmdtoDcMotor('closed',cParams,timeIN);
+[SSE,timeOUT,theta,omega,duty_cycle,eint] = sendCmdtoDcMotor('closed',cParams,timeIN);
 
 % Plot result
 fig(end+1) = figure('Name','sendCmdtoDcMotor.m');
 axs(end+1) = axes('Parent',fig(end));
-obj(end+1) = plot(axs(end),time,theta,'b');
+obj(end+1) = plot(axs(end),timeOUT,theta,'b');
 xlabel(axs(end),'Time (s)');
 ylabel(axs(end),'Angle (radians)');
 drawnow;
+
+% Compare variable sizes
+fprintf('\tc.02\n');
+fprintf('\t\t    "timeIN" Variable Size: [%3d,%3d]\n',size(timeIN));
+fprintf('\t\t   "timeOUT" Variable Size: [%3d,%3d]\n',size(timeOUT));
+fprintf('\t\t     "theta" Variable Size: [%3d,%3d]\n',size(theta));
+fprintf('\t\t"duty_cycle" Variable Size: [%3d,%3d]\n',size(duty_cycle));
+fprintf('\t\t      "eint" Variable Size: [%3d,%3d]\n',size(eint));
+fprintf('\t\t       "SSE" Variable Size: [%3d,%3d]\n',size(SSE));
+fprintf('\t\t       "SSE" Variable Value: %.4f\n',SSE);
