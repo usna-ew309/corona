@@ -112,6 +112,10 @@ fprintf('\tb.03.01\n');
 fprintf('\t\tFunction Image Size: [%3d,%3d,%3d]\n',size(im));
 fprintf('\t\t   Frame Image Size: [%3d,%3d,%3d]\n',size(imTMP));
 
+%% b.03.01.01
+% Test function
+EW309coronaPerforanceEval;
+
 %% b.03.02
 % Test function
 range = 250;    % Range in centimeters
@@ -139,10 +143,6 @@ imTMP = frm.cdata;
 fprintf('\tb.03.02\n');
 fprintf('\t\tFunction Image Size: [%3d,%3d,%3d]\n',size(im));
 fprintf('\t\t   Frame Image Size: [%3d,%3d,%3d]\n',size(imTMP));
-
-%% b.04
-% Test function
-EW309coronaPerforanceEval;
 
 %% b.05
 % Test function
