@@ -30,6 +30,9 @@ function create3Dwalls(varargin)
 %
 %   M. Kutzer, 02Apr2020, USNA
 
+% Updates:
+%   03Apr2020 - *.jpg to *.JPG to fix update error, D. Evangelista
+
 %% Check input(s)
 narginchk(0,1);
 
@@ -137,7 +140,7 @@ for i = 1:numel(roomIDs)
         A_m2b_3D{j} = tmp;
         
         % Load image
-        fname = sprintf('%s_%s_Wall.jpg',roomIDs{i},directionIDs{j});
+        fname = sprintf('%s_%s_Wall.JPG',roomIDs{i},directionIDs{j});
         fname = fullfile(pname,fname);
         im = imread(fname);
         
