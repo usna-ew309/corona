@@ -97,7 +97,8 @@ filenames{2} = {...
     'renderShotPattern.m',...       %     --End getShotPatternImage
     'getCalibrationImage.m',...     % !   Begin getCalibrationImage
     'getTargetImageUpdate.m',...    % !   Begin getTargetImageUpdate
-    'moveTurretFOV.m'};             %     --End getTargetImageUpdate
+    'moveTurretFOV.m',...           %     --End getTargetImageUpdate
+    'EW309coronaPerforanceEval'};   %
 dataFiles(2).Directory = {};
 dataFiles(2).Filenames = {};
 

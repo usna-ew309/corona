@@ -14,7 +14,8 @@ clc
 %   01. getTargetImage.m ----------- TEST
 %   02. getTargetImageUpdate.m ----- TEST
 %   03. getShotPatternImage.m ------ TEST (2x)
-%   04. getCalibrationImage.m ------ TEST
+%   04. EW309coronaPerforanceEval -- TEST
+%   05. getCalibrationImage.m ------ TEST
 % c. Turret-Movement Simulation
 %   01. objFunc.m ------------------ TEST
 %   02. sendCmdtoDcMotor.m --------- TEST
@@ -141,6 +142,10 @@ fprintf('\t\t   Frame Image Size: [%3d,%3d,%3d]\n',size(imTMP));
 
 %% b.04
 % Test function
+EW309coronaPerforanceEval;
+
+%% b.05
+% Test function
 range = 250;    % Range in centimeters
 im = getCalibrationImage(range);
 
@@ -162,7 +167,7 @@ figTMP = findobj(0,'Type','figure','Tag','Figure, FOV Ri080');
 frm = getframe(figTMP);
 imTMP = frm.cdata;
 % -> Compare sizes
-fprintf('\tb.04\n');
+fprintf('\tb.05\n');
 fprintf('\t\tFunction Image Size: [%3d,%3d,%3d]\n',size(im));
 fprintf('\t\t   Frame Image Size: [%3d,%3d,%3d]\n',size(imTMP));
 
