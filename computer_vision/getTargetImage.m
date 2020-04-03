@@ -47,8 +47,8 @@ angle0 = deg2rad( 25*(2*rand - 1) ); % Random value between -25 and 25.
 angle = angle0;
 
 % Use global FOV
+useGlobal = false;
 if nargin < 4
-    useGlobal = false;
     if isstruct(hFOV_global)
         if isfield(hFOV_global,'Figure')
             if ishandle(hFOV_global.Figure)
@@ -152,6 +152,8 @@ if useGlobal
     hFOV_global.getTargetImage.h_a2r = h_a2r;
     % Append angle information
     hFOV_global.getTargetImage.angle = angle;
+    % Append range information
+    hFOV_global.getTargetImage.range = range;
 else
     set(hNEW.Frames.h_r2b,'Matrix',h.H_r2b);
     hNEW.H_r2b = h.H_r2b;

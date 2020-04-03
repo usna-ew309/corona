@@ -33,8 +33,7 @@ end
 
 if isfield(hFOV_global,'getTargetImage')
     % Get angle
-    %angle = hFOV_global.getTargetImage.angle + relative_angle;
-    angle = relative_angle;
+    angle = hFOV_global.getTargetImage.angle + relative_angle;
     % Update turret struct
     h = hFOV_global;
 else
@@ -75,13 +74,15 @@ h.H_r2b = H_r2b_NEW;
 im = getFOVSnapshot(h);
 
 %% Update global angle
-% Recover parent of target(s)
-h_a2r = hFOV_global.getTargetImage.h_a2r;
+% Recover target image info
+getTargetImageINFO = hFOV_global.getTargetImage;
+
 % Update global
 hFOV_global = h;
-% Append zero configuration
+% Recover getTargetImage field info
+hFOV_global.getTargetImage = getTargetImageINFO;
+
+% Update zero configuration
 hFOV_global.getTargetImage.H_r2b_0 = get(h.Frames.h_r2b,'Matrix');
-% Append parent of target(s)
-hFOV_global.getTargetImage.h_a2r = h_a2r;
-% Append angle information
+% Update angle information
 hFOV_global.getTargetImage.angle = angle;

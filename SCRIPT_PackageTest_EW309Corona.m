@@ -13,7 +13,7 @@ clc
 % b. Computer Vision
 %   01. getTargetImage.m ----------- TEST
 %   02. getTargetImageUpdate.m ----- TEST
-%   03. getShotPatternImage.m ------ TEST
+%   03. getShotPatternImage.m ------ TEST (2x)
 %   04. getCalibrationImage.m ------ TEST
 % c. Turret-Movement Simulation
 %   01. objFunc.m ------------------ TEST
@@ -85,14 +85,12 @@ fprintf('\tb.02\n');
 fprintf('\t\tFunction Image Size: [%3d,%3d,%3d]\n',size(im));
 fprintf('\t\t   Frame Image Size: [%3d,%3d,%3d]\n',size(imTMP));
 
-%% b.03
-% Test function
-range = 250;    % Range in centimeters
-nShots = 10;    % Number of shots to take
-im = getShotPatternImage(range,nShots);
+%% b.03.01
+nShots = 10;    % Number of shots
+im = getShotPatternImage(nShots);
 
 % Plot result
-fig(end+1) = figure('Name','getShotPatternImage.m');
+fig(end+1) = figure('Name','getShotPatternImage.m, Single Input');
 axs(end+1) = axes('Parent',fig(end));
 obj(end+1) = imshow(im,'Parent',axs(end));
 set(axs(end),'Visible','on');
@@ -109,7 +107,35 @@ figTMP = findobj(0,'Type','figure','Tag','Figure, FOV Ri080');
 frm = getframe(figTMP);
 imTMP = frm.cdata;
 % -> Compare sizes
-fprintf('\tb.03\n');
+fprintf('\tb.03.01\n');
+fprintf('\t\tFunction Image Size: [%3d,%3d,%3d]\n',size(im));
+fprintf('\t\t   Frame Image Size: [%3d,%3d,%3d]\n',size(imTMP));
+
+%% b.03.02
+% Test function
+range = 250;    % Range in centimeters
+nShots = 10;    % Number of shots to take
+im = getShotPatternImage(range,nShots);
+
+% Plot result
+fig(end+1) = figure('Name','getShotPatternImage.m, Dual Input');
+axs(end+1) = axes('Parent',fig(end));
+obj(end+1) = imshow(im,'Parent',axs(end));
+set(axs(end),'Visible','on');
+xlabel(axs(end),'x (pixels)');
+ylabel(axs(end),'y (pixels)');
+drawnow;
+
+% Compare image sizes 
+%   This is for debugging purposes only. The following code does not use 
+%   the standard functionality of the EW309corona package. Please do not 
+%   obses and stress about the following lines of code. 
+% -> Manually get image
+figTMP = findobj(0,'Type','figure','Tag','Figure, FOV Ri080');
+frm = getframe(figTMP);
+imTMP = frm.cdata;
+% -> Compare sizes
+fprintf('\tb.03.02\n');
 fprintf('\t\tFunction Image Size: [%3d,%3d,%3d]\n',size(im));
 fprintf('\t\t   Frame Image Size: [%3d,%3d,%3d]\n',size(imTMP));
 
