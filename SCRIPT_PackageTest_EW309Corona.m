@@ -3,7 +3,6 @@
 % Package.
 %
 %   M. Kutzer, 20Apr2020, USNA
-
 clear all
 close all
 clc
@@ -23,14 +22,25 @@ clc
 %   01. EW309coronaUpdate.m -------- IGNORE, required admin
 %   02. EW309coronaVer.m ----------- TEST
 
+%% Display status information
+fprintf('RUNNING: "%s"\n',mfilename);
+fprintf('%s - %s\n\n',computer,datestr(now));
+
 %% d.02
+% Test function
 EW309coronaVer;
 
+%% Display status information
+fprintf('RUNNING: "%s"\n',mfilename);
+fprintf('%s - %s\n\n',computer,datestr(now));
+
 %% b.01
+% Test function
 range = 250;    % Range in centimeters
 angle = pi/10;  % Angle in radians
 im = getTargetImage(range,angle);
 
+% Plot result
 fig(1) = figure('Name','getTargetImage.m');
 axs(1) = axes('Parent',fig(end));
 obj(1) = imshow(im,'Parent',axs(end));
@@ -39,10 +49,25 @@ xlabel(axs(end),'x (pixels)');
 ylabel(axs(end),'y (pixels)');
 drawnow;
 
+% Compare image sizes 
+%   This is for debugging purposes only. The following code does not use 
+%   the standard functionality of the EW309corona package. Please do not 
+%   obses and stress about the following lines of code. 
+% -> Manually get image
+figTMP = findobj(0,'Type','figure','Tag','Figure, FOV Ri080');
+frm = getframe(figTMP);
+imTMP = frm.cdata;
+% -> Compare sizes
+fprintf('\tb.01\n');
+fprintf('\t\tFunction Image Size: [%3d,%3d]\n',size(im,1),size(im,1));
+fprintf('\t\t   Frame Image Size: [%3d,%3d]\n',size(imTMP,1),size(imTMP,1));
+
 %% b.02
+% Test function
 relative_angle = -angle;
 im = getTargetImageUpdate(relative_angle);
 
+% Plot result
 fig(end+1) = figure('Name','getTargetImageUpdate.m');
 axs(end+1) = axes('Parent',fig(end));
 obj(end+1) = imshow(im,'Parent',axs(end));
@@ -51,11 +76,26 @@ xlabel(axs(end),'x (pixels)');
 ylabel(axs(end),'y (pixels)');
 drawnow;
 
+% Compare image sizes 
+%   This is for debugging purposes only. The following code does not use 
+%   the standard functionality of the EW309corona package. Please do not 
+%   obses and stress about the following lines of code. 
+% -> Manually get image
+figTMP = findobj(0,'Type','figure','Tag','Figure, FOV Ri080');
+frm = getframe(figTMP);
+imTMP = frm.cdata;
+% -> Compare sizes
+fprintf('\tb.02\n');
+fprintf('\t\tFunction Image Size: [%3d,%3d]\n',size(im,1),size(im,1));
+fprintf('\t\t   Frame Image Size: [%3d,%3d]\n',size(imTMP,1),size(imTMP,1));
+
 %% b.03
+% Test function
 range = 250;    % Range in centimeters
 nShots = 10;    % Number of shots to take
 im = getShotPatternImage(range,nShots);
 
+% Plot result
 fig(end+1) = figure('Name','getShotPatternImage.m');
 axs(end+1) = axes('Parent',fig(end));
 obj(end+1) = imshow(im,'Parent',axs(end));
@@ -64,10 +104,25 @@ xlabel(axs(end),'x (pixels)');
 ylabel(axs(end),'y (pixels)');
 drawnow;
 
+% Compare image sizes 
+%   This is for debugging purposes only. The following code does not use 
+%   the standard functionality of the EW309corona package. Please do not 
+%   obses and stress about the following lines of code. 
+% -> Manually get image
+figTMP = findobj(0,'Type','figure','Tag','Figure, FOV Ri080');
+frm = getframe(figTMP);
+imTMP = frm.cdata;
+% -> Compare sizes
+fprintf('\tb.03\n');
+fprintf('\t\tFunction Image Size: [%3d,%3d]\n',size(im,1),size(im,1));
+fprintf('\t\t   Frame Image Size: [%3d,%3d]\n',size(imTMP,1),size(imTMP,1));
+
 %% b.04
+% Test function
 range = 250;    % Range in centimeters
 im = getCalibrationImage(range);
 
+% Plot result
 fig(end+1) = figure('Name','getCalibrationImage.m');
 axs(end+1) = axes('Parent',fig(end));
 obj(end+1) = imshow(im,'Parent',axs(end));
@@ -76,27 +131,54 @@ xlabel(axs(end),'x (pixels)');
 ylabel(axs(end),'y (pixels)');
 drawnow;
 
+% Compare image sizes 
+%   This is for debugging purposes only. The following code does not use 
+%   the standard functionality of the EW309corona package. Please do not 
+%   obses and stress about the following lines of code. 
+% -> Manually get image
+figTMP = findobj(0,'Type','figure','Tag','Figure, FOV Ri080');
+frm = getframe(figTMP);
+imTMP = frm.cdata;
+% -> Compare sizes
+fprintf('\tb.04\n');
+fprintf('\t\tFunction Image Size: [%3d,%3d]\n',size(im,1),size(im,1));
+fprintf('\t\t   Frame Image Size: [%3d,%3d]\n',size(imTMP,1),size(imTMP,1));
+
 %% c.01
+% Define dat
 uniform_t     = linspace(0,60,500).';           % Uniform time  (made-up, not real, for test only)
 uniform_PWM   = sin(2*pi * uniform_t./10);      % Uniform PWM   (made-up, not real, for test only)
 uniform_theta = 2*pi*cos(2*pi * uniform_t./10); % Uniform angle (made-up, not real, for test only)
 dat = [uniform_PWM, uniform_t, uniform_theta];
-
+% Define x
 b = 5;          % Transfer function numerator   (made-up, not real, for test only)
 a = 2;          % Transfer function pole        (made-up, not real, for test only)
 delta = 0.25;   % Transfer function pole        (made-up, not real, for test only)
 x = [b,a,delta];
 
-metric = objFunc(x,dat)
+% Test function
+metric = objFunc(x,dat);
+
+% Compare variable sizes
+fprintf('\tc.01\n');
+fprintf('\t\t      Variable "x" Size: [%3d,%3d]\n',size(x));
+fprintf('\t\t    Variable "dat" Size: [%3d,%3d]\n',size(dat));
+fprintf('\t\t Variable "metric" Size: [%3d,%3d]\n',size(metric));
+fprintf('\t\tVariable "metric" Value: %.4f\n',metric);
 
 %% c.02
+% Define cParams
 cParams.Kp     = 2.0;
 cParams.Ki     = 0.5;
 cParams.Kd     = 1.0;
 cParams.despos = pi/8;
+% Define time
 timeIN = 0:0.1:10;
 
+% Test function
 [SSE,time,theta,omega,duty_cycle,eint] = sendCmdtoDcMotor('closed',cParams,timeIN);
+
+% Plot result
 fig(end+1) = figure('Name','sendCmdtoDcMotor.m');
 axs(end+1) = axes('Parent',fig(end));
 obj(end+1) = plot(axs(end),time,theta,'b');

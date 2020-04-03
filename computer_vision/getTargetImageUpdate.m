@@ -42,19 +42,45 @@ else
 end
 
 %% Move the turret
-hNEW = moveTurretFOV(h,angle);
+%
+% Review frame definitions
+%   Frame c - camera frame 
+%   Frame r - room center frame
+%   Frame b - barrel frame
+%   Frame a - target "aim" frame
+%   Frame e - barrel "end" frame 
+%   Frame w - room "west" frame (in lower west corner)
+%
+% Review of hgTransforms contained in h.Frames
+%   h_b2c - Barrel relative to Camera   (FIXED TRANSFORM)
+%   h_r2b - Room relative to Barrel
+%   h_w2r - West relative to Room       (FIXED TRANSFORM)
+
+% Get current pose of the room relative to the barrel frame
+H_r2b = get(h.Frames.h_r2b,'Matrix');
+% Get current pose of the barrel relative to the room frame
+H_b2r = H_r2b^(-1);
+% Define updated pose of barrel relatove to room
+H_b2r_NEW = H_b2r*Rz(relative_angle);
+% Define updated pose of room relative to barrel
+H_r2b_NEW = H_b2r_NEW^(-1);
+% Set current pose of the room relative ot the barrel frame
+set(h.Frames.h_r2b,'Matrix',H_r2b_NEW);
 drawnow;
 
+%% Update struct info
+h.H_r2b = H_r2b_NEW;
+
 %% Get an image
-im = getFOVSnapshot(hNEW);
+im = getFOVSnapshot(h);
 
 %% Update global angle
 % Recover parent of target(s)
 h_a2r = hFOV_global.getTargetImage.h_a2r;
 % Update global
-hFOV_global = hNEW;
+hFOV_global = h;
 % Append zero configuration
-hFOV_global.getTargetImage.H_r2b_0 = h.H_r2b;
+hFOV_global.getTargetImage.H_r2b_0 = get(h.Frames.h_r2b,'Matrix');
 % Append parent of target(s)
 hFOV_global.getTargetImage.h_a2r = h_a2r;
 % Append angle information
