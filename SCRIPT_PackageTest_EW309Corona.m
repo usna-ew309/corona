@@ -13,8 +13,9 @@ clc
 %   01. getShotPattern.m ----------- IGNORE, used in (b.01)
 % b. Computer Vision
 %   01. getTargetImage.m ----------- TEST
-%   02. getShotPatternImage.m ------ TEST
-%   03. getCalibrationImage.m ------ TEST
+%   02. getTargetImageUpdate.m ----- TEST
+%   03. getShotPatternImage.m ------ TEST
+%   04. getCalibrationImage.m ------ TEST
 % c. Turret-Movement Simulation
 %   01. objFunc.m ------------------ TEST
 %   02. sendCmdtoDcMotor.m --------- TEST
@@ -39,6 +40,18 @@ ylabel(axs(end),'y (pixels)');
 drawnow;
 
 %% b.02
+relative_angle = -angle;
+im = getTargetImageUpdate(relative_angle);
+
+fig(end+1) = figure('Name','getTargetImageUpdate.m');
+axs(end+1) = axes('Parent',fig(end));
+obj(end+1) = imshow(im,'Parent',axs(end));
+set(axs(end),'Visible','on');
+xlabel(axs(end),'x (pixels)');
+ylabel(axs(end),'y (pixels)');
+drawnow;
+
+%% b.03
 range = 250;    % Range in centimeters
 nShots = 10;    % Number of shots to take
 im = getShotPatternImage(range,nShots);
@@ -51,7 +64,7 @@ xlabel(axs(end),'x (pixels)');
 ylabel(axs(end),'y (pixels)');
 drawnow;
 
-%% b.03
+%% b.04
 range = 250;    % Range in centimeters
 im = getCalibrationImage(range);
 

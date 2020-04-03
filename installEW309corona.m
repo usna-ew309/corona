@@ -95,7 +95,9 @@ filenames{2} = {...
     'setupTurretAndTarget.m',...    % x   --End getTargetImage
     'getShotPatternImage.m',...     % !   Begin getShotPatternImage
     'renderShotPattern.m',...       %     --End getShotPatternImage
-    'getCalibrationImage.m'};       % !   Begin getCalibrationImage
+    'getCalibrationImage.m',...     % !   Begin getCalibrationImage
+    'getTargetImageUpdate.m',...    % !   Begin getTargetImageUpdate
+    'moveTurretFOV.m'};             %     --End getTargetImageUpdate
 dataFiles(2).Directory = {};
 dataFiles(2).Filenames = {};
 

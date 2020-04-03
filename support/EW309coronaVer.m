@@ -5,7 +5,7 @@ function varargout = EW309coronaVer
 %   M. Kutzer, 01Apr2020, USNA
 
 A.Name = 'EW309 Corona Software Package';
-A.Version = '1.1.0';
+A.Version = '1.1.5';
 A.Release = '(R2019a)';
 A.Date = '02-Apr-2020';
 A.URLVer = 1;
