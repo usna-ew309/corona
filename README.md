@@ -2,6 +2,37 @@
 ### L Devries, D Evangelista, M Kutzer, and T Severson
 This material is for simulating the autoturret used in EW309 at the US Naval Academy, since during a coronavirus shutdown the midshipmen will not have access to the turret rigs. The code includes simulations of ballistics; camera inputs from the turret for student machine vision code use; and an integrated simulation code for testing what would have been final system integration.
 
+## Installation
+### Using git
+  - Use `git` to clone the lastest version. From the command line use `git clone https://github.com/usna-ew309/corona.git`. Alternatively, navigate to your MATLAB working directory, right click to get the Git GUI tool, select `clone a respository` and enter in the url [https://github.com/usna-ew309/corona.git]; you can place it in a subdirectory named corona or name it what you like. 
+  - Open MATLAB as administrator
+  - Within MATLAB, change directory to the directory where you have cloned the `corona` files to (e.g. `Documents/MATLAB/corona` or wherever you put them). 
+  - From the MATLAB command window, run the `installEW309corona` script. This will copy some additional files, it may download some additional binary resources if needed, and it will set your PATH so that the corona files are visible to MATLAB.
+
+### When downloading the *.zip
+  - Download `corona-master.zip` from [https://github.com/usna-ew309/corona/archive/master.zip]
+  - Open MATLAB as administrator
+  - Unzip/extract `corona-master.zip`
+  - Change your MATLAB directory to `..\corona-master\corona-master\support`
+  - From the MATLAB command window, run the `EW309coronaUpdate` script. This will copy or download additional files if needed.
+  - Allow the installation to complete. 
+  
+### Install procedure with a single update file
+  - Use this option when you have a stable copy of (only) the `EW309coronaUpdate.m` script. Using this script will allow MATLAB to download any other files needed.
+  - Open MATLAB as administrator
+  - Change your MATLAB directory to the location of `EW309coronaUpdate.m`
+  - Run `EW309coronaUpdate` from the MATLAB command window
+  - Allow the installation to complete.
+  
+### Install procedure with _two_ files
+  - Obtain a stablle copies of both `installSupportToolboxes.m` and `EW309coronaUpdate.m`
+  - Open MATLAB as administrator
+  - Change your MATLAB directory to the location of `installSupportToolboxes.m` and `EW309coronaUpdate.m`. They must be together in the same directory.
+  - Run `installSupportToolboxes` from the MATLAB command window.
+  - Allow `installSupportToolboxes` to complete its installation.
+  - Run `EW309coronaUpdate` from the MATLAB command window.
+  - Allow the installation to complete. 
+
 ## Github notes
 For faculty editing the files, to avoid conflcts, it's best to work on a specific item or module (or even us a separate branch). After you are happy with your revisions, add them, then commit, then push changes:
 ```bash
@@ -9,20 +40,23 @@ git add my-changed-file.m
 git commit -m "I changed my-changed-file.m add a spinning turret using hgtransform"
 git push
 ```
-If using Windows git GUI tools, do XYZ. 
-
 For others, including midshipmen cloning the files:
 ```bash
 git clone https://github.com/usna-ew309/corona.git
 ```
-If using Windows git GUI tools, do XYZ.
+If using Windows git GUI tools, use file browser to navigate to where you wish to clone the repository. Right click to obtain a dialog box; it should contain an option to run Git GUI. Run Git GUI and select `Clone a repository`; enter the URL as `https://github.com/usna-ew309/corona.git` and it should clone the repository.  To commit changes and push, use git GUI in the same way.
 
 To pull the most recent version:
 ```bash
 git pull
 ```
+Using Windows git GUI tools, right click to get to the git GUI and select pull. 
+
+
+
 ## Windows Git and Github notes
 To do this on a USNA windows machine:
+  * Install git and git-lfs from [https://git-scm.com].
   * Download GitHub desktop from [https://desktop.github.com]
   * Install GitHub desktop. This will require administrator rights
   * Prof Kutzer can show you the rest... Github has a tutorial here once you get it installed: [https://guides.github.com/activities/hello-world/]
