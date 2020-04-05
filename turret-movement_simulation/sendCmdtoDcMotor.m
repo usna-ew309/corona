@@ -122,13 +122,43 @@ motorParams.dzone.neg = 0.25; % twenty percent on negative side 0.25 comes from 
 % switch operational modes (closed- or open-loop)
 switch mode
     case 'closed'
+        fprintf('Simulating closed-loop motor dynamics\n');
+        fprintf('for %.1f seconds with time step %.2f seconds...\n',t(end),t(end)-t(end-1));
+        fprintf('Initial position: %.1f rad\n',q0(1))
+        fprintf('Initial velocity: %.1f rad/s\n',q0(2))
+        
         motorParams.case = 3; % closed loop control case
         % integrate EOM
         [~,Q] = ode45(@MotDynHF_sc,t,q0,[],motorParams,control_params);
         
-        % steady-state error
+        % quantify if the response has settled
+        dt = t(end)-t(end-1); % time step from simulation
+        hlfsec_steps = 0.5/dt; % number of time steps in a half second
+
+        % assume settled when speed is near zero
+        ind = find(abs(Q(:,2))<0.0175) % less than 1 degree per second
+        lng = length(ind); % number of indices with slow speed
+        if lng<=hlfsec_steps
+            fprintf('condition 1\n')
+            fprintf('Initial simulation time-span did not result in a steady-state')           
+        else
+            if ind(end)==lng % if the last time step lies within "stop" condition
+                % check if there is a half second of points that are slow
+                ind(end-hlfsec_steps:end)
+            else
+                fprintf('condition 2\n')
+                fprintf('Initial simulation time-span did not result in a steady-state')
+            end
+        end
+        
+                
+        
         lng = ceil(0.05*length(Q(:,1))); % last 5% of data points
-        SSE = control_params.despos - mean(Q(end-lng:end,1));
+        ssval = mean(Q(end-lng:end,1)); % find the average of the last 
+%         stdval
+        
+        % steady-state error
+        SSE = control_params.despos - ssval;
         
         % reconstruct control signal
         err = control_params.despos - Q(:,1); % position error
@@ -139,6 +169,13 @@ switch mode
         dc(dc<-1) = -1;
         
     case 'step'
+        
+        fprintf('Simulating motor dynamics with open-loop step input\n');
+        fprintf('for %.1f seconds with time step %.2f seconds...\n',t(end),t(end)-t(end-1));
+        fprintf('Initial position: %.1f rad\n',q0(1))
+        fprintf('Initial velocity: %.1f rad/s\n',q0(2))
+        fprintf('Step input duty cycle magnitude: %.2f \n',control_params.stepPWM)
+        
         motorParams.case = 2; % step input case
         if abs(control_params.stepPWM)>1
             error('PWM Duty cycle can not have a magnitude greater than 1')

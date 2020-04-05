@@ -1,9 +1,9 @@
 cntrlprms.despos = pi/4;
-cntrlprms.Kp = 1000;
-cntrlprms.Ki = 100;
-cntrlprms.Kd = 200;
+cntrlprms.Kp = .1;
+cntrlprms.Ki = .05;
+cntrlprms.Kd = .1;
 dt = 0.05;
-t = 0:dt:6;
+t = 0:dt:10;
 [SSE,t,theta,omega,dc,eint] = sendCmdtoDcMotor('closed',cntrlprms,t);
 
 figure(1); clf
