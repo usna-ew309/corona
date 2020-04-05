@@ -4,13 +4,13 @@ This material is for simulating the autoturret used in EW309 at the US Naval Aca
 
 ## Installation
 ### Using git
-  - Use `git` to clone the lastest version. From the command line use `git clone https://github.com/usna-ew309/corona.git`. Alternatively, navigate to your MATLAB working directory, right click to get the Git GUI tool, select `clone a respository` and enter in the url [https://github.com/usna-ew309/corona.git]; you can place it in a subdirectory named corona or name it what you like. 
+  - Use `git` to clone the lastest version. From the command line use `git clone https://github.com/usna-ew309/corona.git`. Alternatively, navigate to your MATLAB working directory, right click to get the Git GUI tool, select `clone a respository` and enter in the url <https://github.com/usna-ew309/corona.git>; you can place it in a subdirectory named corona or name it what you like. 
   - Open MATLAB as administrator
   - Within MATLAB, change directory to the directory where you have cloned the `corona` files to (e.g. `Documents/MATLAB/corona` or wherever you put them). 
   - From the MATLAB command window, run the `installEW309corona` script. This will copy some additional files, it may download some additional binary resources if needed, and it will set your PATH so that the corona files are visible to MATLAB.
 
 ### When downloading the *.zip
-  - Download `corona-master.zip` from [https://github.com/usna-ew309/corona/archive/master.zip]
+  - Download `corona-master.zip` from <https://github.com/usna-ew309/corona/archive/master.zip>
   - Open MATLAB as administrator
   - Unzip/extract `corona-master.zip`
   - Change your MATLAB directory to `..\corona-master\corona-master\support`
@@ -44,7 +44,7 @@ For others, including midshipmen cloning the files:
 ```bash
 git clone https://github.com/usna-ew309/corona.git
 ```
-If using Windows git GUI tools, use file browser to navigate to where you wish to clone the repository. Right click to obtain a dialog box; it should contain an option to run Git GUI. Run Git GUI and select `Clone a repository`; enter the URL as `https://github.com/usna-ew309/corona.git` and it should clone the repository.  To commit changes and push, use git GUI in the same way.
+If using Windows git GUI tools, use file browser to navigate to where you wish to clone the repository. Right click to obtain a dialog box; it should contain an option to run Git GUI. Run Git GUI and select `Clone a repository`; enter the URL as <https://github.com/usna-ew309/corona.git> and it should clone the repository.  To commit changes and push, use git GUI in the same way.
 
 To pull the most recent version:
 ```bash
@@ -56,19 +56,21 @@ Using Windows git GUI tools, right click to get to the git GUI and select pull.
 
 ## Windows Git and Github notes
 To do this on a USNA windows machine:
-  * Install git and git-lfs from [https://git-scm.com].
-  * Download GitHub desktop from [https://desktop.github.com]
+  * Install git and git-lfs from <https://git-scm.com>
+  * Download GitHub desktop from <https://desktop.github.com>
   * Install GitHub desktop. This will require administrator rights
-  * Prof Kutzer can show you the rest... Github has a tutorial here once you get it installed: [https://guides.github.com/activities/hello-world/]
+  * Prof Kutzer can show you the rest... Github has a tutorial here once you get it installed: <https://guides.github.com/activities/hello-world/>
   * A tutorial for using the Github desktop client is here:
-[https://idratherbewriting.com/learnapidoc/pubapis_github_desktop_client.html]
+<https://idratherbewriting.com/learnapidoc/pubapis_github_desktop_client.html>
 
 ## Dependencies and prerequisties
-To use these routines, your Matlab will need the following somewhere in its PATH:
-  * [https://github.com/kutzer/PlottingToolbox ]
+Installation using the procedures above should install all the necessary dependencies and prerequisites.
+
+For reference purposes only, to use these routines, your Matlab will need the following somewhere in its PATH:
+  * <https://github.com/kutzer/PlottingToolbox>
     - `simulateImage.m` (needs to be updated to replace `print` & `imread` with `getframe`)
     - `plotCameraFOV.m`
-  * [https://github.com/kutzer/WRC_MATLABCameraSupport ]
+  * <https://github.com/kutzer/WRC_MATLABCameraSupport >
      - `drawDFKCam.m` (we should make a `drawPicoICubieCam`)
 
 ## Ballistics simulation
@@ -76,13 +78,13 @@ To use these routines, your Matlab will need the following somewhere in its PATH
 ## Control simulation
 ## Integrated simulation
 
-## Packaging
+## Packaging note
 Cloning the repository, via `git clone` or the GUI tool, will provide all the files needed, however, if you download the zip from Github it will replace the digital resource files with links (this method is not recommended). For ease of download from Google Drive, we can create zips of major releases and upload them there. To tag a major release and then zip it for this type of use:
 ```bash
-git tag -a v20.4.1rc0 -m "Creating release candidate 0"
+git tag -a v1.2.0rc1 -m "Creating release candidate 1"
 git push origin tags
 git fetch --all --tags
-zip -r coronoa-v20.4.1rc0.zip corona -x '*.git*'
+zip -r coronoa-v1.2.0rc1.zip corona -x '*.git*'
 ```
 
 ### Contributors
