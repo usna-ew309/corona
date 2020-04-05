@@ -70,7 +70,7 @@ For reference purposes only, to use these routines, your Matlab will need the fo
   * <https://github.com/kutzer/PlottingToolbox>
     - `simulateImage.m` (needs to be updated to replace `print` & `imread` with `getframe`)
     - `plotCameraFOV.m`
-  * <https://github.com/kutzer/WRC_MATLABCameraSupport >
+  * <https://github.com/kutzer/WRC_MATLABCameraSupport>
      - `drawDFKCam.m` (we should make a `drawPicoICubieCam`)
 
 ## Ballistics simulation
