@@ -107,7 +107,7 @@ for mm = 3:1:length(opConditions)+2
     % Generate "Real" data from the nonlinear simulation model
     cntrlprms.stepPWM = opConditions(mm-2);
     time = transpose(0:.01:10);
-    [~,~,pos,~,~] = sendCmdtoDcMotor('step',cntrlprms,time);
+    [~,~,~,pos,~,~] = sendCmdtoDcMotor('step',cntrlprms,time);
     dc = cntrlprms.stepPWM*ones(size(time));
     dc(time<1) = 0;
     

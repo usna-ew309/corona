@@ -1,17 +1,17 @@
-function [SSE,varargout] = sendCmdtoDcMotor(mode,control_params,varargin)
+function [SSE,ts,varargout] = sendCmdtoDcMotor(mode,control_params,varargin)
 % SENDCMDTODCMOTOR emulates the behavior of the EW309 turret platforms
-% under various user-specified operational conditions. The Primary output
-% of the function is the steady-state error of the closed-loop system.
-% However, optional input and output arguments can be specified to
-% configure the system to simulate various open- or closed-loop
-% configurations.
-%   SSE = SENDCMDTODCMOTOR(mode,control_params)
+% under various user-specified operational conditions. The Primary outputs
+% of the function are the steady-state error and settling time of the
+% closed-loop system. However, optional input and output arguments can be
+% specified to configure the system to simulate various open- or
+% closed-loop configurations.
+%   [SSE,ts] = SENDCMDTODCMOTOR(mode,control_params)
 %
-%   SSE = SENDCMDTODCMOTOR(mode,control_params,time)
+%   [SSE,ts] = SENDCMDTODCMOTOR(mode,control_params,time)
 %
-%   SSE = SENDCMDTODCMOTOR(mode,control_params,time,q0)
+%   [SSE,ts] = SENDCMDTODCMOTOR(mode,control_params,time,q0)
 %
-%   [SSE,time,theta,omega,duty_cycle,eint] = SENDCMDTODCMOTOR(___)
+%   [SSE,ts,time,theta,omega,duty_cycle,eint] = SENDCMDTODCMOTOR(___)
 %
 %   Inputs:
 %       mode: control operational mode: 'step' or 'closed'
@@ -26,14 +26,17 @@ function [SSE,varargout] = sendCmdtoDcMotor(mode,control_params,varargin)
 %           control_params.Kp: proportional gain on closed-loop controller
 %           control_params.Ki: integral gain on closed-loop controller
 %           control_params.Kd: derivative gain on closed loop controller
+%           control_params.SS_threshold: motor speed considered to be "steady-state"
+%                                        defaults to 1 deg/s if not
+%                                        specified
 %        The following parameters are necessary when in step input mode
 %           control_params.stepPWM: PWM duty cycle magnitude (0-1) of step
 %           input (only applies to open-loop operational mode)
 %
 %   Optional inputs:
-%       SSE = sendCmdtoDcMotor('closed',control_params,time)
+%       [SSE,ts] = sendCmdtoDcMotor('closed',control_params,time)
 %           time: time array to use in simulating the motor e.g. t=0:.1:3;
-%       SSE = sendCmdtoDcMotor('closed',control_params,time,q0)
+%       [SSE,ts] = sendCmdtoDcMotor('closed',control_params,time,q0)
 %           q0: initial condition of motor, as a vector of initial
 %           position, initial speed, initial armature current, and initial
 %           integral error, e.g.
@@ -43,6 +46,8 @@ function [SSE,varargout] = sendCmdtoDcMotor(mode,control_params,varargin)
 %       SSE: the position error, assuming the response came to rest (i.e.
 %            reached steady-state). SSE is computed using the last 10% of
 %            the complete response
+%       ts : Structure containing the settling time and the index number
+%            where the response reaches steady-state
 %
 %   Optional Outputs (in order of output):
 %       time: Time array used in the simulation. 
@@ -63,6 +68,7 @@ function [SSE,varargout] = sendCmdtoDcMotor(mode,control_params,varargin)
 %   cntrlprms.Kp = 0.5;
 %   cntrlprms.Ki = 0.02;
 %   cntrlprms.Kd = 0.02;
+%   cntrlprms.SS_threshold = 1*pi/180; % 1 deg/s or less defines s-s
 %   t = 0:.05:10;
 %   [SSE,t,theta,omega,dc,eint] = sendCmdtoDcMotor('closed',cntrlprms,t);
 % OR
@@ -122,43 +128,88 @@ motorParams.dzone.neg = 0.25; % twenty percent on negative side 0.25 comes from 
 % switch operational modes (closed- or open-loop)
 switch mode
     case 'closed'
-        fprintf('Simulating closed-loop motor dynamics\n');
+        fprintf('Simulating closed-loop motor dynamics....\n');
         fprintf('for %.1f seconds with time step %.2f seconds...\n',t(end),t(end)-t(end-1));
         fprintf('Initial position: %.1f rad\n',q0(1))
         fprintf('Initial velocity: %.1f rad/s\n',q0(2))
         
-        motorParams.case = 3; % closed loop control case
-        % integrate EOM
-        [~,Q] = ode45(@MotDynHF_sc,t,q0,[],motorParams,control_params);
-        
-        % quantify if the response has settled
-        dt = t(end)-t(end-1); % time step from simulation
-        hlfsec_steps = 0.5/dt; % number of time steps in a half second
-
-        % assume settled when speed is near zero
-        ind = find(abs(Q(:,2))<0.0175) % less than 1 degree per second
-        lng = length(ind); % number of indices with slow speed
-        if lng<=hlfsec_steps
-            fprintf('condition 1\n')
-            fprintf('Initial simulation time-span did not result in a steady-state')           
-        else
-            if ind(end)==lng % if the last time step lies within "stop" condition
-                % check if there is a half second of points that are slow
-                ind(end-hlfsec_steps:end)
+        stopCondition = 0;
+        while(stopCondition==0)
+            
+            motorParams.case = 3; % closed loop control case
+            % integrate EOM
+            fprintf('Starting model integration...')
+            [~,Q] = ode45(@MotDynHF_sc,t,q0,[],motorParams,control_params);
+            fprintf('Done.\n')
+            fprintf('Checking if response reached steady-state...\n')
+            
+            % quantify if the response has settled
+            dt = t(end)-t(end-1); % time step from simulation
+            hlfsec_steps = 0.5/dt; % number of time steps in a half second
+            
+            % assume settled when speed is near zero
+            ex = isfield(control_params,'SS_threshold'); % use user-specified threshold if provided, default to 1 deg/s
+            if ex==0
+                ind = find(abs(Q(:,2))<0.0175); % less than 1 degree per second
             else
-                fprintf('condition 2\n')
-                fprintf('Initial simulation time-span did not result in a steady-state')
+                ind = find(abs(Q(:,2))<control_params.SS_threshold); % user-provided s-s threshold
+            end
+            
+            lng = length(ind); % number of indices with slow speed
+            
+            if lng<=hlfsec_steps % if there are less indices than 1/2 second, it could not have reached steady-state
+                fprintf('condition 1: not settled for 1/2 second\n')
+                fprintf('Initial simulation time-span did not result in a steady-state\n')
+                fprintf('extending simulation time and re-simulating....')
+                
+                t = 0:dt:(t(end)+5);
+                stopCondition = 0;
+            else % may have reached steady-state, further analysis required
+                
+                if ind(end)==length(t) % if the last time step lies within "stop" condition
+                    
+                    % check if there is a half second of points that are slow
+                    tmp = sum(diff(ind(end-uint8(hlfsec_steps):end)));
+                    
+                    if tmp==uint8(hlfsec_steps) % case implies the last 0.5 seconds were in s-s     
+                        stopCondition = 1;
+                        fprintf('Response reached steady-state.')
+                    else % in this case the last time step was in s-s, but not long enough to be sufficient
+                        fprintf('Response appears to have settled, but not long enough to be conclusive.\n')
+                        fprintf('Extending simulation time and re-simulating....\n')
+                        t = 0:dt:(t(end)+2);
+                        stopCondition = 0;
+                    end
+                else % if last time step is not slow, can't be in s-s
+                    fprintf('condition 2: final speed not slow enough\n')
+                    fprintf('Initial simulation time-span did not result in a steady-state\n')
+                    fprintf('Extending simulation time and re-simulating....\n')
+                    
+                    t = 0:dt:(t(end)+5);
+                    stopCondition = 0;
+                end
             end
         end
         
-                
         
-        lng = ceil(0.05*length(Q(:,1))); % last 5% of data points
-        ssval = mean(Q(end-lng:end,1)); % find the average of the last 
-%         stdval
+        
+        
+        ssval = mean(Q(end-uint8(hlfsec_steps):end,1)); % find the average of the last 1/2 second
         
         % steady-state error
         SSE = control_params.despos - ssval;
+
+        % compute settling time
+        ts_inds = find(abs(Q(:,1)-ssval)/ssval<=0.02); % find indices where response is within 2 percent of s-s
+        ts_diffs = diff(ts_inds); % find dividers in clusters of points within 2 percent (e.g. if there is a crossing of s-s)
+        clusters = find(ts_diffs>1); % jumps of greater than 1 mean a crosing of s-s
+        if isempty(clusters)==1 % case where it does not overshoot
+            ts.time = t(ts_inds(1));
+            ts.index = ts_inds(1);
+        else % case where it overshoots
+            ts.time = t(ts_inds(clusters(end)+1)); % choose last crossing time
+            ts.index = ts_inds(clusters(end)+1); % isolate last crossing index
+        end
         
         % reconstruct control signal
         err = control_params.despos - Q(:,1); % position error
@@ -181,10 +232,14 @@ switch mode
             error('PWM Duty cycle can not have a magnitude greater than 1')
         end
         % integrate EOM
+        fprintf('Starting model integration...')
         [~,Q] = ode45(@MotDynHF_sc,t,q0,[],motorParams,control_params);
-        
+        fprintf('Done\n')
         % steady-state error (non-existent for step input)
         SSE = NaN;
+        
+        % settling time (not applicable)
+        ts = NaN;
         
         % reconstruct control signal
         dc = zeros(size(Q(:,1)));
@@ -209,9 +264,8 @@ out(:,3) = Q(:,2); % omega
 out(:,4) = dc;     % duty cycle
 out(:,5) = Q(:,4); % error integral
 
-
 % Optional outputs
-nout = max(nargout,1)-1;
+nout = max(nargout,1)-2;
 for k = 1:nout
     varargout{k} = out(:,k);
 end
