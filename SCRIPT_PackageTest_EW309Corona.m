@@ -223,4 +223,5 @@ fprintf('\t\t      "eint" Variable Size: [%3d,%3d]\n',size(eint));
 fprintf('\t\t       "SSE" Variable Size: [%3d,%3d]\n',size(SSE));
 fprintf('\t\t        "ts" Variable Size: [%3d,%3d]\n',size(ts));
 fprintf('\t\t       "SSE" Variable Value: %.4f\n',SSE);
-fprintf('\t\t        "ts" Variable Value: %.4f\n',ts);
+fprintf('\t\t   "ts.time" Variable Value: %.4f\n',ts.time);
+fprintf('\t\t  "ts.index" Variable Value: %d\n',ts.index);
