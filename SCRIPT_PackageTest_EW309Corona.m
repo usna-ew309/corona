@@ -203,7 +203,7 @@ cParams.despos = pi/8;
 timeIN = 0:0.1:10;
 
 % Test function
-[SSE,timeOUT,theta,omega,duty_cycle,eint] = sendCmdtoDcMotor('closed',cParams,timeIN);
+[SSE,ts,timeOUT,theta,omega,duty_cycle,eint] = sendCmdtoDcMotor('closed',cParams,timeIN);
 
 % Plot result
 fig(end+1) = figure('Name','sendCmdtoDcMotor.m');
@@ -221,4 +221,6 @@ fprintf('\t\t     "theta" Variable Size: [%3d,%3d]\n',size(theta));
 fprintf('\t\t"duty_cycle" Variable Size: [%3d,%3d]\n',size(duty_cycle));
 fprintf('\t\t      "eint" Variable Size: [%3d,%3d]\n',size(eint));
 fprintf('\t\t       "SSE" Variable Size: [%3d,%3d]\n',size(SSE));
+fprintf('\t\t        "ts" Variable Size: [%3d,%3d]\n',size(ts));
 fprintf('\t\t       "SSE" Variable Value: %.4f\n',SSE);
+fprintf('\t\t        "ts" Variable Value: %.4f\n',ts);
