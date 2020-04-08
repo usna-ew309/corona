@@ -98,6 +98,7 @@ filenames{2} = {...
     'getCalibrationImage.m',...     % !   Begin getCalibrationImage
     'getTargetImageUpdate.m',...    % !   Begin getTargetImageUpdate
     'moveTurretFOV.m',...           %     --End getTargetImageUpdate
+    'makeWobbleTransform.m',...     % !
     'EW309coronaPerforanceEval.m'}; % !
 dataFiles(2).Directory = {};
 dataFiles(2).Filenames = {};

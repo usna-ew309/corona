@@ -128,7 +128,7 @@ hideTriad(h_a2r); % Hide the "triad" visualization
 % Create the patch object 
 ptc = patch('Parent',h_a2r,'Vertices',verts,'Faces',faces,...
     'FaceColor',double(reshape(cPatch,1,3))./256,...
-    'EdgeColor','none');
+    'EdgeColor','none','Tag','Target');
 % Update the "material" finish of the patch object
 materialsSTR = {'shiny','dull','metal'};
 material(ptc,materialsSTR{2});              % Dull finish, selected by 

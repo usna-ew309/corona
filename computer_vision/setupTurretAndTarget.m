@@ -148,7 +148,14 @@ h_a2r = placeTarget(h_a2r,target.XYZ,target.theta,0);
 % Get transformation
 H_a2r = get(h_a2r,'Matrix');
 % Place target again *with* wobble
-h_a2r = placeTarget(h_a2r,target.XYZ,target.theta,target.wobble);
+%h_a2r = placeTarget(h_a2r,target.XYZ,target.theta,target.wobble);
+% -> Create wobble frame
+H_aw2a = makeWobbleTransform(target.wobble);
+h_aw2a = triad('Parent',h_a2r,'Scale',150,'LineWidth',1.5,...
+    'Tag','Wobble Frame','Matrix',H_aw2a);
+hideTriad(h_aw2a); % Hide the "triad" visualization
+% -> Make target a child of wobbled frame
+set(obj,'Parent',h_aw2a);
 
 % -> Barrel "end" frame relative to target "aim" frame
 H_e2a = Tz(range)*Tx(-targetSpecs.HorizontalBias)*Ty(-targetSpecs.VerticalBias)*Rx(-pi/2);
