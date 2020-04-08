@@ -5,9 +5,9 @@ function varargout = EW309coronaVer
 %   M. Kutzer, 01Apr2020, USNA
 
 A.Name = 'EW309 Corona Software Package';
-A.Version = '1.2.2';
+A.Version = '1.2.3';
 A.Release = '(R2019a)';
-A.Date = '07-Apr-2020';
+A.Date = '08-Apr-2020';
 A.URLVer = 1;
 
 msg{1} = sprintf('MATLAB %s Version: %s %s',A.Name, A.Version, A.Release);
