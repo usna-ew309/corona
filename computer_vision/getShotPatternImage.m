@@ -115,38 +115,14 @@ else
     H_r2b = get(hFOV_global.Frames.h_r2b,'Matrix');
     H_b2r = H_r2b^(-1);
     
-    %{
-    % Calculate unwobbled xy plane relative to room
-    abcd_xy_a2r(1,1:3) = H_a2r(1:3,3).';                    % z-directon of Frame a (normal to the plane)
-    abcd_xy_a2r(1,4) = -abcd_xy_a2r(1,1:3)*H_a2r(1:3,4);    % Plane Normal * point on the plane
-    abcd_xy_a2r * H_a2r(:,4) % DEBUG
-    H_a2r(:,4) % DEBUG
-    % Calculate parametric line pointing in the y-direction of Frame b
-    p1 = H_b2r(1:3,4)      % Origin of barrel frame
-    p2 = p1 + H_b2r(1:3,2); % Origin + y-direction of barrel frame
-    M = [p1,p2]*[0,1; 1,1];
-    % Calculate line/plane intersection
-    % abc*M*[s; 1] + d = 0;
-    % abc*M(:,1)*s + abc*M(:,2) + d = 0
-    % s = -(abc*M(:,2) + d)/abc*M(:,1)
-    abc = abcd_xy_a2r(1,1:3);
-    d = abcd_xy_a2r(1,4);
-    s = -(abc*M(:,2) + d)/(abc*M(:,1))
-    pnt_s2r = M*[s; 1]   % Point of intersection. 
-                          % This should be the origin of our shot pattern.
-    H_s2r = H_a2r;
-    H_s2r(1:3,4) = pnt_s2r;
-    H_r2a = H_a2r^(-1);
-    H_s2a = H_r2a*H_s2r;
-    %}
     % Define barrel relative to unwobbled frame 
-    H_b2a = H_r2a*H_b2r     % barrel relative to target "aim" frame
-    y_b2a = H_b2a(1:3,2)
-    phi = atan2(y_b2a(1),-y_b2a(3))
-    a = H_b2a(3,4)
-    x = a*tan(phi)
-    y = H_b2a(2,4)
-    H_s2a = Tx(x)*Ty(y)
+    H_b2a = H_r2a*H_b2r;     % barrel relative to target "aim" frame
+    y_b2a = H_b2a(1:3,2);
+    phi = atan2(y_b2a(1),-y_b2a(3));
+    a = H_b2a(3,4);
+    x = a*tan(phi);
+    y = H_b2a(2,4);
+    H_s2a = Tx(x)*Ty(y);
     
     % Define unwobbled frame
     h_s2a  = triad('Parent',h_a2r,'Scale',150,'LineWidth',1.5,...
