@@ -226,9 +226,6 @@ axs(end+1) = axes('Parent',fig(end));
 obj(end+1) = plot(axs(end),timeOUT,theta,'b');
 xlabel(axs(end),'Time (s)');
 ylabel(axs(end),'Angle (radians)');
-hold(axs(end),'on');
-pltH(end+1) = plot(axs(end),size(im,2)*[0.0,1.0],size(im,1)*[0.5,0.5],':g','LineWidth',1.5);
-pltV(end+1) = plot(axs(end),size(im,2)*[0.5,0.5],size(im,1)*[0.0,1.0],':g','LineWidth',1.5);
 drawnow;
 
 % Compare variable sizes
