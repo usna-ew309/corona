@@ -149,9 +149,8 @@ else
     H_s2a = Tx(x)*Ty(y)
     
     % Define unwobbled frame
-    h_a2aw = triad('Parent',h_a2r,'Scale',150,'LineWidth',1.5,'Matrix',H_a2aw);
-    hideTriad(h_a2aw); % Hide the "triad" visualization
-    h_s2a  = triad('Parent',h_a2aw,'Scale',150,'LineWidth',1.5,'Matrix',H_s2a);
+    h_s2a  = triad('Parent',h_a2r,'Scale',150,'LineWidth',1.5,...
+        'Tag','Shot Pattern Frame','Matrix',H_s2a);
     hideTriad(h_s2a); % Hide the "triad" visualization
     
     % Find xy plane of 

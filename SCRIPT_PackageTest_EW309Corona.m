@@ -64,7 +64,7 @@ fprintf('\t\t   Frame Image Size: [%3d,%3d,%3d]\n',size(imTMP));
 
 %% b.02
 % Test function
-relative_angle = -0.5*angle;
+relative_angle = -0.8*angle;
 im = getTargetImageUpdate(relative_angle); % <------------- FUNCTION CALL -
 
 % Plot result

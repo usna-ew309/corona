@@ -155,7 +155,7 @@ h_aw2a = triad('Parent',h_a2r,'Scale',150,'LineWidth',1.5,...
     'Tag','Wobble Frame','Matrix',H_aw2a);
 hideTriad(h_aw2a); % Hide the "triad" visualization
 % -> Make target a child of wobbled frame
-set(obj,'Parent',h_aw2a);
+set(objs,'Parent',h_aw2a);
 
 % -> Barrel "end" frame relative to target "aim" frame
 H_e2a = Tz(range)*Tx(-targetSpecs.HorizontalBias)*Ty(-targetSpecs.VerticalBias)*Rx(-pi/2);
