@@ -105,6 +105,10 @@ else
     %   h_b2c - Barrel relative to Camera   (FIXED TRANSFORM)
     %   h_r2b - Room relative to Barrel
     %   h_w2r - West relative to Room       (FIXED TRANSFORM)
+    %
+    % Additional frame definitions
+    %   Frame aw - "wobbled" target "aim" frame (target parent)
+    %   Frame a  - "unwobbled" target "aim" frame
     
     H_aw2r = get(h_a2r,'Matrix'); % Wobbled frame
     H_r2b = get(hFOV_global.Frames.h_r2b,'Matrix');
@@ -119,13 +123,41 @@ else
     H_a2aw = eye(4);
     H_a2aw(1:3,1:3) = R_a2aw;
     
-    % Define unwobbled frame
-    h_a2aw = triad('Parent',h_a2r,'Scale',150,'LineWidth',1.5);
-    hideTriad(h_a2aw); % Hide the "triad" visualization
+    % Define unwobbled frame relative to room
+    H_a2r = H_aw2r*H_a2aw;
+    % Define barrel frame relative to room
+    % H_b2r (already calculated)
+    % Calculate unwobbled xy plane relative to room
+    abcd_xy_a2r(1,1:3) = H_a2r(1:3,3).';
+    adcd_xy_a2r(1,4) = -abcd_xy_a2r(1:3,1)*H_a2r(1:3,4);
+    % Calculate parametric line pointing in the y-direction of Frame b
+    p1 = H_b2r(1:3,4);
+    p2 = p1 + H_b2r(1:3,2);
+    M = [p1,p2]*[0,1; 1,1];
+    % Calculate line/plane intersection
+    % abc*M*[s; 1] + d = 0;
+    % abc*M(:,1)*s + abc*M(:,2) + d = 0
+    % s = -(abc*M(:,2) + d)/abc*M(:,1)
+    abc = abcd_xy_a2r(1,1:3);
+    d = abcd_xy_a2r(1,4);
+    s = -(abc*M(:,2) + d)/abc*M(:,1);
+    pnt_s2r = M*[s; 1];   % Point of intersection. 
+                          % This should be the origin of our shot pattern.
+    H_s2r = H_a2r;
+    H_s2r(1:3,4) = pnt_s2r;
+    H_r2a = H_a2r^(-1);
+    H_s2a = H_r2a*H_s2r;
     
+    % Define unwobbled frame
+    h_a2aw = triad('Parent',h_a2r,'Scale',150,'LineWidth',1.5,'Matrix',H_a2aw);
+    hideTriad(h_a2aw); % Hide the "triad" visualization
+    h_s2a  = triad('Parent',h_a2aw,'Scale',150,'LineWidth',1.5,'Matrix',H_s2a);
+    hideTriad(h_s2a); % Hide the "triad" visualization
+    
+    % Find xy plane of 
     % Overwrite shot pattern parent
     % -> This bastardizes the notation for this one special case
-    h_a2r = h_a2aw;
+    h_a2r = h_s2a;
     
     hNEW = hFOV_global;
 end
