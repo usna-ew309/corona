@@ -35,7 +35,7 @@ fprintf('%s, MATLAB %s, %s\n',computer,version('-release'),datestr(now));
 % Test function
 range = 250;    % Range in centimeters
 angle = pi/10;  % Angle in radians
-im = getTargetImage(range,angle);
+im = getTargetImage(range,angle); % <---------------------- FUNCTION CALL -
 
 % Plot result
 fig(1) = figure('Name','getTargetImage.m');
@@ -44,6 +44,9 @@ obj(1) = imshow(im,'Parent',axs(end));
 set(axs(end),'Visible','on');
 xlabel(axs(end),'x (pixels)');
 ylabel(axs(end),'y (pixels)');
+hold(axs(end),'on');
+pltH(1) = plot(axs(end),size(im,2)*[0.0,1.0],size(im,1)*[0.5,0.5],':g','LineWidth',1.5);
+pltV(1) = plot(axs(end),size(im,2)*[0.5,0.5],size(im,1)*[0.0,1.0],':g','LineWidth',1.5);
 drawnow;
 
 % Compare image sizes 
@@ -62,7 +65,7 @@ fprintf('\t\t   Frame Image Size: [%3d,%3d,%3d]\n',size(imTMP));
 %% b.02
 % Test function
 relative_angle = -angle;
-im = getTargetImageUpdate(relative_angle);
+im = getTargetImageUpdate(relative_angle); % <------------- FUNCTION CALL -
 
 % Plot result
 fig(end+1) = figure('Name','getTargetImageUpdate.m');
@@ -71,6 +74,9 @@ obj(end+1) = imshow(im,'Parent',axs(end));
 set(axs(end),'Visible','on');
 xlabel(axs(end),'x (pixels)');
 ylabel(axs(end),'y (pixels)');
+hold(axs(end),'on');
+pltH(end+1) = plot(axs(end),size(im,2)*[0.0,1.0],size(im,1)*[0.5,0.5],':g','LineWidth',1.5);
+pltV(end+1) = plot(axs(end),size(im,2)*[0.5,0.5],size(im,1)*[0.0,1.0],':g','LineWidth',1.5);
 drawnow;
 
 % Compare image sizes 
@@ -88,7 +94,7 @@ fprintf('\t\t   Frame Image Size: [%3d,%3d,%3d]\n',size(imTMP));
 
 %% b.03.01
 nShots = 10;    % Number of shots
-im = getShotPatternImage(nShots);
+im = getShotPatternImage(nShots); % <---------------------- FUNCTION CALL -
 
 % Plot result
 fig(end+1) = figure('Name','getShotPatternImage.m, Single Input');
@@ -97,6 +103,9 @@ obj(end+1) = imshow(im,'Parent',axs(end));
 set(axs(end),'Visible','on');
 xlabel(axs(end),'x (pixels)');
 ylabel(axs(end),'y (pixels)');
+hold(axs(end),'on');
+pltH(end+1) = plot(axs(end),size(im,2)*[0.0,1.0],size(im,1)*[0.5,0.5],':g','LineWidth',1.5);
+pltV(end+1) = plot(axs(end),size(im,2)*[0.5,0.5],size(im,1)*[0.0,1.0],':g','LineWidth',1.5);
 drawnow;
 
 % Compare image sizes 
@@ -114,13 +123,13 @@ fprintf('\t\t   Frame Image Size: [%3d,%3d,%3d]\n',size(imTMP));
 
 %% b.03.01.01
 % Test function
-EW309coronaPerforanceEval;
+EW309coronaPerforanceEval; % <----------------------------- FUNCTION CALL -
 
 %% b.03.02
 % Test function
 range = 250;    % Range in centimeters
 nShots = 10;    % Number of shots to take
-im = getShotPatternImage(range,nShots);
+im = getShotPatternImage(range,nShots); % <---------------- FUNCTION CALL -
 
 % Plot result
 fig(end+1) = figure('Name','getShotPatternImage.m, Dual Input');
@@ -129,6 +138,9 @@ obj(end+1) = imshow(im,'Parent',axs(end));
 set(axs(end),'Visible','on');
 xlabel(axs(end),'x (pixels)');
 ylabel(axs(end),'y (pixels)');
+hold(axs(end),'on');
+pltH(end+1) = plot(axs(end),size(im,2)*[0.0,1.0],size(im,1)*[0.5,0.5],':g','LineWidth',1.5);
+pltV(end+1) = plot(axs(end),size(im,2)*[0.5,0.5],size(im,1)*[0.0,1.0],':g','LineWidth',1.5);
 drawnow;
 
 % Compare image sizes 
@@ -147,7 +159,7 @@ fprintf('\t\t   Frame Image Size: [%3d,%3d,%3d]\n',size(imTMP));
 %% b.05
 % Test function
 range = 250;    % Range in centimeters
-im = getCalibrationImage(range);
+im = getCalibrationImage(range); % <----------------------- FUNCTION CALL -
 
 % Plot result
 fig(end+1) = figure('Name','getCalibrationImage.m');
@@ -156,6 +168,9 @@ obj(end+1) = imshow(im,'Parent',axs(end));
 set(axs(end),'Visible','on');
 xlabel(axs(end),'x (pixels)');
 ylabel(axs(end),'y (pixels)');
+hold(axs(end),'on');
+pltH(end+1) = plot(axs(end),size(im,2)*[0.0,1.0],size(im,1)*[0.5,0.5],':g','LineWidth',1.5);
+pltV(end+1) = plot(axs(end),size(im,2)*[0.5,0.5],size(im,1)*[0.0,1.0],':g','LineWidth',1.5);
 drawnow;
 
 % Compare image sizes 
@@ -184,7 +199,7 @@ delta = 0.25;   % Transfer function pole        (made-up, not real, for test onl
 x = [b,a,delta];
 
 % Test function
-metric = objFunc(x,dat);
+metric = objFunc(x,dat); % <------------------------------- FUNCTION CALL -
 
 % Compare variable sizes
 fprintf('\tc.01\n');
@@ -202,7 +217,7 @@ cParams.despos = pi/8;
 % Define time
 timeIN = 0:0.1:10;
 
-% Test function
+% Test function  % v--------------------------------------- FUNCTION CALL -
 [SSE,ts,timeOUT,theta,omega,duty_cycle,eint] = sendCmdtoDcMotor('closed',cParams,timeIN);
 
 % Plot result
@@ -211,6 +226,9 @@ axs(end+1) = axes('Parent',fig(end));
 obj(end+1) = plot(axs(end),timeOUT,theta,'b');
 xlabel(axs(end),'Time (s)');
 ylabel(axs(end),'Angle (radians)');
+hold(axs(end),'on');
+pltH(end+1) = plot(axs(end),size(im,2)*[0.0,1.0],size(im,1)*[0.5,0.5],':g','LineWidth',1.5);
+pltV(end+1) = plot(axs(end),size(im,2)*[0.5,0.5],size(im,1)*[0.0,1.0],':g','LineWidth',1.5);
 drawnow;
 
 % Compare variable sizes
