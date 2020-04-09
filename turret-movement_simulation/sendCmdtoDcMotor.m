@@ -70,7 +70,7 @@ function [SSE,ts,varargout] = sendCmdtoDcMotor(mode,control_params,varargin)
 %   cntrlprms.Kd = 0.02;
 %   cntrlprms.SS_threshold = 1*pi/180; % 1 deg/s or less defines s-s
 %   t = 0:.05:10;
-%   [SSE,t,theta,omega,dc,eint] = sendCmdtoDcMotor('closed',cntrlprms,t);
+%   [SSE,ts,t,theta,omega,dc,eint] = sendCmdtoDcMotor('closed',cntrlprms,t);
 % OR
 %   SSE = sendCmdtoDcMotor('closed',cntrlprms,t);
 %
@@ -78,7 +78,7 @@ function [SSE,ts,varargout] = sendCmdtoDcMotor(mode,control_params,varargin)
 % Example usage (open-loop step input):
 %   cntrlprms.stepPWM = 0.45; % 45% duty cycle step input
 %   t = 0:.05:10;
-%   [SSE,t,theta,omega,dc,eint] = sendCmdtoDcMotor('step',cntrlprms,t);
+%   [SSE,ts,t,theta,omega,dc,eint] = sendCmdtoDcMotor('step',cntrlprms,t);
 % OR
 %   SSE = sendCmdtoDcMotor('step',cntrlprms,t,[0;0;0;0]);
 %
