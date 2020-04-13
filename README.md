@@ -17,21 +17,36 @@ This material is for simulating the autoturret used in EW309 at the US Naval Aca
   - From the MATLAB command window, run the `EW309coronaUpdate` script. This will copy or download additional files if needed.
   - Allow the installation to complete. 
   
-### Install procedure with a single update file
-  - Use this option when you have a stable copy of (only) the `EW309coronaUpdate.m` script. Using this script will allow MATLAB to download any other files needed.
+### Install procedure with three files (from Google Drive)
+  - Download files
+    - `installSupportToolboxes.m`
+    - `EW309coronaUpdate.m`
+    - `SCRIPT_PackageTest_EW309Corona.m`
   - Open MATLAB as administrator
-  - Change your MATLAB directory to the location of `EW309coronaUpdate.m`
-  - Run `EW309coronaUpdate` from the MATLAB command window
-  - Allow the installation to complete.
-  
-### Install procedure with _two_ files
-  - Obtain a stablle copies of both `installSupportToolboxes.m` and `EW309coronaUpdate.m`
-  - Open MATLAB as administrator
-  - Change your MATLAB directory to the location of `installSupportToolboxes.m` and `EW309coronaUpdate.m`. They must be together in the same directory.
-  - Run `installSupportToolboxes` from the MATLAB command window.
-  - Allow `installSupportToolboxes` to complete its installation.
-  - Run `EW309coronaUpdate` from the MATLAB command window.
-  - Allow the installation to complete. 
+  - Change MATLAB Current Directory to the location of the downloaded files
+  - Run `installSupportToolboxes` from the MATLAB Commmand Window to install prerequisites
+  - Run `EW309coronaUpdate` from the MATLAB Command Window to install the Corona stack
+  - Run `SCRIPT_PackageTest_EW309Corona` from the Command Window to test the installation
+
+### Troubleshooting installation issues
+#### Known warnings:
+``` 
+Warning: Unable to remove temporary download folder. C:\User\midshipman\AppData\Local\Temp\EW309corona > In EW309coronaUpdate (line 64)
+```
+This is a non-critical write-error (MATLAB is still accessing files in a folder that the installer is trying to delete).
+
+#### Known Errors:
+``` 
+Error using installPlottingToolbox (line 64)
+```
+This most likely means you are not running Matlab as administrator, most likely. To fix, close MATLAB, and open MATLAB as administrator. 
+
+
+```
+Error in SCRIPT_PackageTest_EW309Corona (line 187)
+```
+This means you are missing the Control System Toolbox. Run `supportPackageInstaller` from the MATLAB Command Window. Search for `Control System Toolbox` and install `Control System Toolbox`.
+
 
 ## Github notes
 For faculty editing the files, to avoid conflcts, it's best to work on a specific item or module (or even us a separate branch). After you are happy with your revisions, add them, then commit, then push changes:
