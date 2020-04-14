@@ -2,10 +2,10 @@ function varargout = EW309coronaVer
 % EW309CORONAVER provides version information for the EW309 Corona Software
 % package.
 %
-%   M. Kutzer, 01Apr2020, USNA
+%   M. Kutzer, 14Apr2020, USNA
 
 A.Name = 'EW309 Corona Software Package';
-A.Version = '1.2.4';
+A.Version = '1.2.5';
 A.Release = '(R2019a)';
 A.Date = '08-Apr-2020';
 A.URLVer = 1;

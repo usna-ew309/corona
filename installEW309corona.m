@@ -99,6 +99,7 @@ filenames{2} = {...
     'getTargetImageUpdate.m',...    % !   Begin getTargetImageUpdate
     'moveTurretFOV.m',...           %     --End getTargetImageUpdate
     'makeWobbleTransform.m',...     % !
+    'createTargetSpecs.m',...       % !
     'EW309coronaPerforanceEval.m'}; % !
 dataFiles(2).Directory = {};
 dataFiles(2).Filenames = {};
