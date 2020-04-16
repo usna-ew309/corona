@@ -160,9 +160,9 @@ switch mode
             if lng<=hlfsec_steps % if there are less indices than 1/2 second, it could not have reached steady-state
                 fprintf('condition 1: not settled for 1/2 second\n')
                 fprintf('Initial simulation time-span did not result in a steady-state\n')
-                fprintf('extending simulation time and re-simulating....')
-                
                 t = 0:dt:(t(end)+5);
+                fprintf('extending simulation time to %.2f and re-simulating....',t(end))
+                
                 stopCondition = 0;
             else % may have reached steady-state, further analysis required
                 
@@ -176,16 +176,16 @@ switch mode
                         fprintf('Response reached steady-state.')
                     else % in this case the last time step was in s-s, but not long enough to be sufficient
                         fprintf('Response appears to have settled, but not long enough to be conclusive.\n')
-                        fprintf('Extending simulation time and re-simulating....\n')
                         t = 0:dt:(t(end)+2);
+                        fprintf('Extending simulation time to %.2f and re-simulating....\n',t(end))
                         stopCondition = 0;
                     end
                 else % if last time step is not slow, can't be in s-s
                     fprintf('condition 2: final speed not slow enough\n')
                     fprintf('Initial simulation time-span did not result in a steady-state\n')
-                    fprintf('Extending simulation time and re-simulating....\n')
-                    
                     t = 0:dt:(t(end)+5);
+                    fprintf('Extending simulation time to %.2f and re-simulating....\n',t(end))
+                                        
                     stopCondition = 0;
                 end
             end
@@ -193,8 +193,8 @@ switch mode
         
         
         
-        
-        ssval = mean(Q(end-uint8(hlfsec_steps):end,1)); % find the average of the last 1/2 second
+        tmp = Q(end-round(hlfsec_steps):end,1);
+        ssval = mean(tmp); % find the average of the last 1/2 second
         
         % steady-state error
         SSE = control_params.despos - ssval;

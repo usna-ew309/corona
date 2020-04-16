@@ -1,7 +1,7 @@
 cntrlprms.despos = pi/4;
-cntrlprms.Kp = .3;
-cntrlprms.Ki = .1;
-cntrlprms.Kd = .1;
+cntrlprms.Kp = .154;
+cntrlprms.Ki = .0346;
+cntrlprms.Kd = .1362;
 dt = 0.05;
 t = 0:dt:10;
 length(t)
