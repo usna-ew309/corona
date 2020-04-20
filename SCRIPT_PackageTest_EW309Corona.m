@@ -9,19 +9,19 @@ clc
 
 %% Define Key Functions
 % a. Ballistics:
-%   01. getShotPattern.m ----------- IGNORE, used in (b.01)
+%   01. getShotPattern.m ------------- IGNORE, used in (b.01)
 % b. Computer Vision
-%   01. getTargetImage.m ----------- TEST
-%   02. getTargetImageUpdate.m ----- TEST
-%   03. getShotPatternImage.m ------ TEST (2x)
-%   04. EW309coronaPerforanceEval -- TEST
-%   05. getCalibrationImage.m ------ TEST
+%   01. getTargetImage.m ------------- TEST
+%   02. getTargetImageUpdate.m ------- TEST
+%   03. getShotPatternImage.m -------- TEST (2x)
+%   04. EW309coronaPerformanceEval.m - TEST
+%   05. getCalibrationImage.m -------- TEST
 % c. Turret-Movement Simulation
-%   01. objFunc.m ------------------ TEST
-%   02. sendCmdtoDcMotor.m --------- TEST
+%   01. objFunc.m -------------------- TEST
+%   02. sendCmdtoDcMotor.m ----------- TEST
 % d. Support
-%   01. EW309coronaUpdate.m -------- IGNORE, required admin
-%   02. EW309coronaVer.m ----------- TEST
+%   01. EW309coronaUpdate.m ---------- IGNORE, required admin
+%   02. EW309coronaVer.m ------------- TEST
 
 %% d.02
 % Test function
@@ -123,7 +123,7 @@ fprintf('\t\t   Frame Image Size: [%3d,%3d,%3d]\n',size(imTMP));
 
 %% b.03.01.01
 % Test function
-EW309coronaPerforanceEval; % <----------------------------- FUNCTION CALL -
+EW309coronaPerformanceEval; % <----------------------------- FUNCTION CALL -
 
 %% b.03.02
 % Test function

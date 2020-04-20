@@ -100,7 +100,8 @@ filenames{2} = {...
     'moveTurretFOV.m',...           %     --End getTargetImageUpdate
     'makeWobbleTransform.m',...     % !
     'createTargetSpecs.m',...       % !
-    'EW309coronaPerforanceEval.m'}; % !
+    'EW309coronaPerforanceEval.m',...   % TODO - Remove this once corrected function name is fully adopted.
+    'EW309coronaPerformanceEval.m'}; % !
 dataFiles(2).Directory = {};
 dataFiles(2).Filenames = {};
 

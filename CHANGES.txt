@@ -3,4 +3,6 @@ v1.2.0, April 2020 -- Eager Youngster - release candidate 1
 v1.2.2, 7 April 2020 -- Surly Second Class 
 v1.2.3, 8 April 2020 -- Jaded Firstie 
 v1.2.4, 8 April 2020 -- Shrugging Ensign
-v1.2.5, 8 April 2020 -- Lagging LTJG
+v1.2.5, 8 April 2020 -- Junior Grade
+v1.2.7, 20 April 2020 -- Locked On Lieutenant
+

@@ -173,7 +173,7 @@ switch mode
                     
                     if tmp==uint8(hlfsec_steps) % case implies the last 0.5 seconds were in s-s     
                         stopCondition = 1;
-                        fprintf('Response reached steady-state.')
+                        fprintf('Response reached steady-state.\n')
                     else % in this case the last time step was in s-s, but not long enough to be sufficient
                         fprintf('Response appears to have settled, but not long enough to be conclusive.\n')
                         t = 0:dt:(t(end)+2);
