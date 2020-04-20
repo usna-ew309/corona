@@ -1,6 +1,11 @@
-function EW309coronaPerforanceEval
-
-error('This function has been replaced by "EW309coronaPerformanceEval.m"');
+function EW309coronaPerformanceEval
+% EW309CORONAPERFORMANCEEVAL displays the target and shot pattern in a
+% body-fixed coordinate frame allowing users to easily assess hits. 
+%
+%   M. Kutzer, 03Apr2020, USNA
+%
+% NOTE: This functions was originally named "EW309coronaPerforanceEval."
+%       The typo was identified by T. Severson on 20Apr2020.
 
 global hFOV_global
 

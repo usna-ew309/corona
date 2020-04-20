@@ -123,7 +123,7 @@ fprintf('\t\t   Frame Image Size: [%3d,%3d,%3d]\n',size(imTMP));
 
 %% b.03.01.01
 % Test function
-EW309coronaPerforanceEval; % <----------------------------- FUNCTION CALL -
+EW309coronaPerformanceEval; % <----------------------------- FUNCTION CALL -
 
 %% b.03.02
 % Test function
