@@ -10,6 +10,10 @@ function targetSpecs = createTargetSpecs(varargin)
 %   targetSpecs = CREATETARGETSPECS(diameter,hBias,vBias) specifies the
 %   horizontal and vertical bias in centimeters.
 %
+%       NOTE: The vertical bias is referenced to the center of the NERF
+%             barrel. If you want to center the target with the center of
+%             the camera frame, please *add 10cm to your vBias*.
+%
 %   targetSpecs = CREATETARGETSPECS(diameter,hBias,vBias,color) specifies
 %   the color.
 %
