@@ -40,7 +40,7 @@ h_s2a = triad('Parent',h_a,'Matrix',H_s2a,'Visible','off');
 
 % Display target
 ptc = copyobj(ptc_Target,h_aw2a);
-set(ptc,'EdgeColor','k');
+set(ptc,'EdgeColor','k','FaceAlpha',0.3);
 % Display shots
 sho = copyobj(ptc_nShots,h_s2a);
 set(sho,'EdgeColor','k','FaceAlpha',0.5);
