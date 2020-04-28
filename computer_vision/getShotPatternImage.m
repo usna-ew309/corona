@@ -59,7 +59,11 @@ if nargin < 3
             end
         end
         % Get xbias information <--- KUTZER FIX, 28Apr2020
-        xbias = hFOV_global.getTargetImage.xbias;
+        if isfield(hFOV_global,'getTargetImage')
+            if isfield(hFOV_global.getTargetImage,'xbias')
+                xbias = hFOV_global.getTargetImage.xbias;
+            end
+        end
         % Update turret struct
         h = hFOV_global;
     else
