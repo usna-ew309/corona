@@ -154,6 +154,10 @@ if useGlobal
     hFOV_global.getTargetImage.angle = angle;
     % Append range information
     hFOV_global.getTargetImage.range = range;
+    % Append bias information
+    % TODO - This needs to have an equivalent in the "else" category!!!
+    hFOV_global.getTargetImage.xbias = targetSpecs.HorizontalBias;
+    hFOV_global.getTargetImage.ybias = targetSpecs.VerticalBias;
 else
     set(hNEW.Frames.h_r2b,'Matrix',h.H_r2b);
     hNEW.H_r2b = h.H_r2b;

@@ -1,18 +1,18 @@
-function im = getShotPatternImage(varargin)
-% GETSHOTPATTERNIMAGE creates a simulated image of a shot pattern on the SW
+function im = getShotPatternImageFIX(varargin)
+% GETSHOTPATTERNIMAGEFIX creates a simulated image of a shot pattern on the SW
 % chalkboard of Ri080.
-%   im = GETSHOTPATTERNIMAGE(range,nShots) creates a simulated image of a 
+%   im = GETSHOTPATTERNIMAGEFIX(range,nShots) creates a simulated image of a 
 %   shot pattern and point of ain on an EW309 chalkboard. The variable 
 %   "range" must be specified in *centimeters*. The number of shots is  
 %   specified using "nShots". The variable "nShots" must be an integer 
 %   value greater than 0. 
 %
-%   im = GETSHOTPATTERNIMAGE(nShots) can only be run after getTargetImage.m
+%   im = GETSHOTPATTERNIMAGEFIX(nShots) can only be run after getTargetImage.m
 %
-%   im = GETSHOTPATTERNIMAGE(h,range,nShots) uses a pre-defined FOV 
+%   im = GETSHOTPATTERNIMAGEFIX(h,range,nShots) uses a pre-defined FOV 
 %   specified using the strucured array h. Use "createEW309RoomFOV.m".
 %
-%   M. Kutzer, 01Apr2020, USNA
+%   M. Kutzer, 28Apr2020, USNA
 
 %% Define global FOV simulation
 % Yes, I realize that globals are generally lazy coding, but I am doing
@@ -125,8 +125,8 @@ else
     y_b2a = H_b2a(1:3,2);
     phi = atan2(y_b2a(1),-y_b2a(3));
     a = H_b2a(3,4);
-    x = a*tan(phi);        % <---- ORIGINAL CODE!
-    %x = a*tan(phi) - xbias; % <--- KUTZER FIX, 28Apr2020
+    %x = a*tan(phi);        % <---- ORIGINAL CODE!
+    x = a*tan(phi) - xbias; % <--- KUTZER FIX, 28Apr2020
     y = H_b2a(2,4);
     H_s2a = Tx(x)*Ty(y);
     

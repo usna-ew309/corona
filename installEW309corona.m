@@ -94,7 +94,8 @@ filenames{2} = {...
     'placeTarget.m',...             % x
     'setupTurretAndTarget.m',...    % x   --End getTargetImage
     'getShotPatternImage.m',...     % !   Begin getShotPatternImage
-    'renderShotPattern.m',...       %     --End getShotPatternImage
+    'getShotPatternImageFIX.m',...  % x
+    'renderShotPattern.m',...       % x   --End getShotPatternImage
     'getCalibrationImage.m',...     % !   Begin getCalibrationImage
     'getTargetImageUpdate.m',...    % !   Begin getTargetImageUpdate
     'moveTurretFOV.m',...           %     --End getTargetImageUpdate
