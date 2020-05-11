@@ -204,16 +204,15 @@ switch mode
         ts_diffs = diff(ts_inds); % find dividers in clusters of points within 2 percent (e.g. if there is a crossing of s-s)
         clusters = find(ts_diffs>1); % jumps of greater than 1 mean a crosing of s-s
         if isempty(clusters)==1 % case where it does not overshoot
-            % KUTZER FIX
-            try
-                % Response was found
-                ts.time = t(ts_inds(1));
-                ts.index = ts_inds(1);
-            catch
+            if isempty(ts_inds)==1 % case where it doesn't reach s-s at all
                 % No response found
                 warning(sprintf('Steady state did not reach within 2%% of the steady state threshold.\n\t\t -> Check your gains!'));
                 ts.time = inf;
-                ts.index = nan;
+                ts.index = nan;                
+            else % reaches steady-state
+                % Response was found
+                ts.time = t(ts_inds(1));
+                ts.index = ts_inds(1);
             end
         else % case where it overshoots
             ts.time = t(ts_inds(clusters(end)+1)); % choose last crossing time

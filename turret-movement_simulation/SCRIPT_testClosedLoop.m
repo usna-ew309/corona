@@ -1,9 +1,10 @@
 cntrlprms.despos = pi/4;
-cntrlprms.Kp = .154;
-cntrlprms.Ki = .0346;
-cntrlprms.Kd = .1362;
-dt = 0.05;
-t = 0:dt:10;
+cntrlprms.Kp = .495;
+cntrlprms.Ki = .2223;
+cntrlprms.Kd = .1104;
+cntrlprms.SS_threshold = 1*pi/180;
+dt = 0.1;
+t = 0:dt:2;
 length(t)
 [SSE,set_time,t,theta,omega,dc,eint] = sendCmdtoDcMotor('closed',cntrlprms,t);
 length(t)
